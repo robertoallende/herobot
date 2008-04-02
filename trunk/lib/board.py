@@ -95,20 +95,20 @@ class Board:
         return(b)
 
     def draw_score(self):
-        initial_pos = (self.graph_sides, self.game.board_height - self.graph_bottom)
+        initial_pos = (self.graph_sides, self.game.screen_height - self.graph_bottom)
         self.score_text = Text("Score: " + str(self.score) , initial_pos )
         return self.score_text
 
     def draw_time(self):
         initial_pos = (self.background.get_rect().centerx - 125 \
-                      , self.game.board_height - self.graph_bottom)
+                      , self.game.screen_height - self.graph_bottom)
         self.time_text = Text("Time Left: " + str(self.time) , initial_pos, 1 )
         return self.time_text
 
 
     def draw_target(self):
         initial_pos = (self.background.get_rect().centerx + 125 \
-                      , self.game.board_height - self.graph_bottom)
+                      , self.game.screen_height - self.graph_bottom)
         self.target_text = Text("Required Deaths: " + str(self.time) , initial_pos, 1 )
         return self.target_text
 
@@ -116,7 +116,7 @@ class Board:
     def draw_lives(self):
         #lives 
         initial_pos = ( self.game.board_width - 60 - self.graph_sides, \
-                        self.game.board_height - self.graph_bottom )
+                        self.game.screen_height - self.graph_bottom )
         self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 1 )
         return self.lives_text
 
