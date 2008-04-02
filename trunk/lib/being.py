@@ -22,11 +22,16 @@ class Being:
         la idea de esta clase es que junte todos los sprites y le haga hacer todas su acciones en conjunto
         asi pareciera que es uno solo, parecido a un spritegroup pero sin algunas de sus limitaciones
     """
-    def __init__(self,carril):
-        #una interface, debe ser implementada por la clase hija
-        #usar initbeing en la implementacion
-        self.initBeing('body.png', 'head.png','legc.png', 'lego.png',carril)
-        pass
+    def __init__(self,body_image, head_image,legc_image,lego_image,armc_image, armo_image,carril):
+        self.legs = AnimatedPart(carril, legc_image, lego_image)
+        self.body = Bodypart((carril[0], carril[1] - self.legs.rect.height),body_image)
+        self.head = Bodypart((carril[0], carril[1] - self.body.rect.height), head_image)
+        self.arms = AnimatedPart(carril,armc_image, armo_image)
+        self.setpos(carril)
+        self.size = (self.body.rect.height + self.head.rect.height, max(self.body.rect.width,self.head.rect.width))
+        self.rect = self.body.rect
+        self.dizzy = 0
+        self.group = pygame.sprite.Group(self.body,self.head,self.arms,self.legs)
     
     def update(self,direction):
         if not self.dizzy:
@@ -42,33 +47,28 @@ class Being:
         self.legs.setpos(newpos)
         self.body.setpos(self.bodypos(newpos))
         self.head.setpos(self.headpos(newpos))
+        self.arms.setpos(self.armspos(newpos))
         self.rect = self.body.rect
-        
-    def initBeing(self,body_image,head_image,legsc_image,legso_image,carril):
-        #self.legsopen = Bodypart(carril, legso_image)
-        self.legs = Legs(carril, legsc_image, legso_image)
-        self.body = Bodypart((carril[0], carril[1] - self.legs.rect.height),body_image)
-        self.head = Bodypart((carril[0], carril[1] - self.body.rect.height), head_image)
-        self.setpos(carril)
-        self.size = (self.body.rect.height + self.head.rect.height, max(self.body.rect.width,self.head.rect.width))
-        self.rect = self.body.rect
-        self.dizzy = 0
-        self.group = pygame.sprite.Group(self.body,self.head)
         
     def move_left(self):
         self.legs.move_left()
         self.body.move_left()
         self.head.move_left()
+        self.arms.move_left()
     
     def move_right(self):
         self.legs.move_right()
         self.body.move_right()
         self.head.move_right()
+        self.arms.move_right()
    
    
     def flip(self):
-        self.body.image = pygame.transform.flip(self.body.image,1,0)
-        self.head.image = pygame.transform.flip(self.head.image,1,0)
+        self.body.flip_images()
+        self.head.flip_images()
+        self.legs.flip_images()
+        self.arms.flip_images()
+        
         
         
     def headpos(self, pos):
@@ -76,13 +76,16 @@ class Being:
     
     def bodypos(self,pos):
         return (pos[0] + self.legs.rect.width/2 - self.body.rect.width/2, pos[1] - self.legs.rect.height)
-        
+    
+    def armspos(self,pos):
+        return (self.body.rect.left + self.arms.rect.width, self.body.rect.bottom - self.body.rect.height +self.arms.rect.height )
     
     def drawbeing(self):
         screen = pygame.display.get_surface()
         screen.blit(self.body.image, self.body.rect)
         screen.blit(self.head.image, self.head.rect)
         self.legs.draw()
+        self.arms.draw()
         
     def is_hited(self,sprite):
         list = pygame.sprite.spritecollide(sprite, self.group, False)
@@ -115,35 +118,76 @@ class Bodypart(pygame.sprite.Sprite):
         self.rect.left = self.rect.left +1
             
     def setpos(self,newpos):
-        #self.rect.topleft= newpos
         self.rect.bottom = newpos[1]
         self.rect.left = newpos[0]
+        
+    def flip_images(self):
+        self.image = pygame.transform.flip(self.image,1,0)
         
     def draw(self):
         screen = pygame.display.get_surface()
         screen.blit(self.image, self.rect)
     
         
-class Legs(Bodypart):
+class AnimatedPart(Bodypart):
     def __init__(self,pos, image1,image2):
         Bodypart.__init__(self,pos,image1)
         self.image2, self.tirar = data.load_image(image2)
         self.img_num = 0
+        
     def draw(self):
         screen = pygame.display.get_surface()
         if self.img_num: screen.blit(self.image, self.rect); self.img_num = 1 - self.img_num
         else: screen.blit(self.image2, self.rect); self.img_num = 1 - self.img_num
+        
+    def flip_images(self):
+        if self.img_num: self.image = pygame.transform.flip(self.image,1,0)
+        else: self.image2 = pygame.transform.flip(self.image2,1,0)
+
 
 class Robot(Being):
     def __init__(self,carril, character = None):
         if not character:
-            self.initBeing('body.png', 'head.png','legc.png','lego.png', carril)
-    pass
+            Being.__init__(self,'body.png','head.png','legc.png','lego.png',carril)
+            
+    def hited(self):
+        if not self.dizzy:
+            self.dizzy = 1
+            self.body.original = self.body.image
+            self.head.original = self.head.image
+            
+    def kill(self):
+        self._spin()
+            
+    def _spin(self):
+        "spin the image"
+        center_body = self.body.rect.center
+        center_head = self.head.rect.center
+        self.dizzy += 12
+        if self.dizzy >= 360:
+            self.dizzy = 0
+            self.body.image = self.body.original
+            self.head.image = self.head.original
+        else:
+            rotate = pygame.transform.rotate
+            self.body.image = rotate(self.body.original, self.dizzy)
+            self.head.image = rotate(self.head.original, self.dizzy)
+            
+        self.body.rect = self.body.image.get_rect(center=center_body)
+        self.head.rect = self.head.image.get_rect(center=center_head)
+
+
 
 class Human(Being):
     def __init__(self,carril, character = None):
         if not character:
-            self.initBeing('body.png', 'head.png','legc.png','lego.png',carril)
+            body = load_being('human','body')
+            head = load_being('human','head')
+            legc = load_being('human', 'legsc')
+            lego = load_being('human', 'legso')
+            armc = load_being('human', 'armsc')
+            armo = load_being('human', 'armso')
+            Being.__init__(self,body,head,legc,lego,armc,armo,carril)
     
     def hited(self):
         if not self.dizzy:
@@ -167,9 +211,11 @@ class Human(Being):
             rotate = pygame.transform.rotate
             self.body.image = rotate(self.body.original, self.dizzy)
             self.head.image = rotate(self.head.original, self.dizzy)
+            
         self.body.rect = self.body.image.get_rect(center=center_body)
         self.head.rect = self.head.image.get_rect(center=center_head)
-
+def load_being(being, bodypart):
+    return being+'-'+str(int(round(uniform(0,0))))+str(int(round(uniform(0,0))))+'-'+bodypart+'.png'
 
         
 def main():
