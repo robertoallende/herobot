@@ -88,9 +88,12 @@ phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace
 # metodo baston
 def main():
 	from pygame.locals import *
+	from data import filepath
 
+	font_filename = "GROOT___.TTF" #"Carnevalee Freakshow.ttf" #"pointy.ttf"  #"GROOT___.TTF"
 	pygame.init()
-	font = pygame.font.SysFont("arial", 100)
+	#font = pygame.font.SysFont("arial", 100)
+	font = pygame.font.Font( filepath( font_filename ), 100)
 	screen = pygame.display.set_mode(SCREEN_SIZE)
 	presentation(phrase, font, screen)
 	screen.update()
