@@ -26,11 +26,11 @@ class Bodypart(pygame.sprite.Sprite):
     def update(self,direction):
         pass
             
-    def move_left(self):
-        self.rect.left = self.rect.left -1
+    def move_left(self, speed=1):
+        self.rect.left = self.rect.left - speed
         
-    def move_right(self):
-        self.rect.left = self.rect.left +1
+    def move_right(self, speed=1):
+        self.rect.left = self.rect.left +speed
             
     def setpos(self,newpos):
         self.rect.bottom = newpos[1]
@@ -100,13 +100,13 @@ class Being:
         self.dizzy = 0
         self.group = pygame.sprite.Group(self.body,self.head,self.arms,self.legs)
     
-    def update(self,direction):
+    def update(self,direction, speed=1):
         if not self.dizzy:
             self.rect = self.body.rect
             if direction == "right":
-                self.move_right()
+                self.move_right(speed)
             else:
-                self.move_left()
+                self.move_left(speed)
         else:
             self.kill()
     
@@ -117,17 +117,17 @@ class Being:
         self.arms.setpos(self.armspos(newpos))
         self.rect = self.body.rect
         
-    def move_left(self):
-        self.legs.move_left()
-        self.body.move_left()
-        self.head.move_left()
-        self.arms.move_left()
+    def move_left(self,speed=1):
+        self.legs.move_left(speed)
+        self.body.move_left(speed)
+        self.head.move_left(speed)
+        self.arms.move_left(speed)
     
-    def move_right(self):
-        self.legs.move_right()
-        self.body.move_right()
-        self.head.move_right()
-        self.arms.move_right()
+    def move_right(self,speed=1):
+        self.legs.move_right(speed)
+        self.body.move_right(speed)
+        self.head.move_right(speed)
+        self.arms.move_right(speed)
    
    
     def flip(self):
@@ -269,17 +269,18 @@ def main():
     direction = "right"
     area = screen.get_rect()
     fist = Fist()
+    clock = pygame.time.Clock()
     while pygame.event.poll().type != KEYDOWN:
         screen.fill([0, 0, 0]) # blank the screen.
         # Save time by only calling this once
-        time = pygame.time.get_ticks() 
+        #time = pygame.time.get_ticks() 
         for event in pygame.event.get():
             if event.type == MOUSEBUTTONDOWN:
                 if being.is_hited(fist):
                     being.hited()
             elif event.type == MOUSEBUTTONUP:
                 fist.unpunch()
-        
+        time_passed = clock.tick(200)
         being.update(direction)
         fist.update()
         
