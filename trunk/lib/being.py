@@ -5,12 +5,8 @@ import pygame
 from random import uniform
 from pygame.locals import *
 #para probarlo hacer click sobre el objeto que da vueltas por ahi!!! y da vueltas como zaino!!!
-#TODO: *animar los sprites,
-#      *decidir que hacen cuadno se les dispara ( por ahora los humanos giran como el juego punch chimp)
-#      *eleccion de imagenes de cuerpos pies y cabezas a azar
-#      *agregar pies (pero estos giles se tiene que mover para dar la ilucion que caminan y no que levitan)
-#      *comentar el codigo y arreglarlo un poco por que esta horrible!!
-#      * y pensa!!!! que falta???
+#TODO: *decidir que hacen cuadno se les dispara ( por ahora los humanos giran como el juego punch chimp)
+#      *comentar el codigo 
 #      * como carajo le agregamos la sangre????
 #      *como destruimos un sprite para que una vez muerto no joda mas??
 #      *donde y que le devolvemos al gil que dispara
@@ -272,7 +268,7 @@ def main():
     being = Human(carril)
     direction = "right"
     area = screen.get_rect()
-    angle = 30
+    
     fist = Fist()
     while pygame.event.poll().type != KEYDOWN:
         screen.fill([0, 0, 0]) # blank the screen.
