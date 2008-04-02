@@ -32,17 +32,19 @@ class Box(pygame.sprite.Sprite):
         self.rect.topleft = initial_position
 
 class Text(pygame.sprite.Sprite):
-    def __init__(self, text, initial_pos, center=0, color = (255, 255, 255)):
+    def __init__(self, text, initial_pos, paragraph=0, color = (255, 255, 255)):
         pygame.sprite.Sprite.__init__(self)
         self.text = text
-        self.panel_font = load_fonts()
+        self.panel_font = panel_font()
         self.render_text = self.panel_font.render(text, True, color)
         self.image = self.render_text
 
-        if center: 
+        if paragraph == 1: 
             pos = (initial_pos[0]-(self.render_text.get_width() / 2 ), initial_pos[1])
-        else:
+        elif paragraph == 0:
             pos = (initial_pos[0] , initial_pos[1])
+        elif paragraph == 2:
+            pos = (initial_pos[0] - self.render_text.get_width(), initial_pos[1])
 
         self.rect = list(pos)
         self.width = self.render_text.get_width()
@@ -63,7 +65,7 @@ class Text(pygame.sprite.Sprite):
         self.width = self.render_text.get_width()
 
 class Board:
-    def __init__(self, game):
+    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100):
         self.game = game
         self.screen = self.game.screen
         self.time_passed = 0
@@ -71,10 +73,10 @@ class Board:
         self.graph_bottom = 20
         self.graph_sides = 2
 
-        self.score = 0
-        self.time = 30
-        self.lives = 3
-        self.target = 100
+        self.score = score
+        self.time = time
+        self.lives = lives
+        self.target = target
 
         #background
         self.background = pygame.Surface(self.game.screen.get_size())
@@ -88,7 +90,6 @@ class Board:
         self.sprites.add( self.draw_score() )
         self.sprites.add( self.draw_target() )
         self.sprites.add( self.draw_lives() )
-#       self.draw_background()
 
     def draw_background(self):
         b = Box([255, 0, 0], [0, 0], [self.game.board_width, self.game.board_height ]) 
@@ -105,23 +106,20 @@ class Board:
         self.time_text = Text("Time Left: " + str(self.time) , initial_pos, 1 )
         return self.time_text
 
-
     def draw_target(self):
         initial_pos = (self.background.get_rect().centerx + 125 \
                       , self.game.screen_height - self.graph_bottom)
         self.target_text = Text("Required Deaths: " + str(self.time) , initial_pos, 1 )
         return self.target_text
 
-
     def draw_lives(self):
         #lives 
-        initial_pos = ( self.game.board_width - 60 - self.graph_sides, \
+        initial_pos = ( self.game.board_width  - self.graph_sides, \
                         self.game.screen_height - self.graph_bottom )
-        self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 1 )
+        self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 2 )
         return self.lives_text
 
-
-    def update(self, time_passed, hits ):
+    def update(self, time_passed, hits, lives ):
         '''Blit everything to the screen'''
         if self.time_passed <= 0:
             self.time -= 1
@@ -136,8 +134,11 @@ class Board:
             self.target -= hits
             self.target_text.update(time_passed, "Required Deaths: " + str( self.target ) )
 
-        self.time_passed -= time_passed
+        if lives > 0:
+            self.lives -= lives
+            self.lives_text.update(time_passed, "Error Margin: " + str( self.lives ) )
 
+        self.time_passed -= time_passed
 
     def clear(self):
         self.sprites.clear(self.screen, self.background)
@@ -145,15 +146,28 @@ class Board:
     def draw(self):
         self.sprites.draw(self.screen)
 
+    def end(self):
+        if self.time == 0:
+            return True
+        elif self.lives == 0:
+            return True
+        else:
+            return False
 
+    def end_reason(self):
+        if self.lives == 0:
+            return 'kill robot' 
+        elif self.time == 0 and self.target > 0:
+            return 'not enough' 
+        elif self.time == 0 and self.target == 0:
+            return 'end level'
 
 
 # metodo baston 
-def load_fonts():
+def panel_font():
     pygame.font.init()
     panel_font = pygame.font.Font(None, 24) 
     return panel_font
-
 
 def main():
     # ver http://www.sacredchao.net/~piman/writing/sprite-tutorial.shtml
@@ -184,6 +198,8 @@ def main():
         pygame.display.update()
 
         board.clear()
+
+
 
 if __name__ == "__main__":
     main()
