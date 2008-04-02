@@ -283,7 +283,7 @@ def main():
         
         being.update(direction)
         fist.update()
-        angle +=1
+        
         #se fija si llego al borde de la pantalla, en tal caso tira una moneda y vuelve a largar
         #el sprite por la izquierda o la derecha segun la moneda
         old_direction = direction
