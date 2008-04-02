@@ -130,12 +130,13 @@ def main():
         screen.fill([0, 0, 0]) # blank the screen.
         # Save time by only calling this once
         time = pygame.time.get_ticks() 
-        for event in pygame.event.get():
-            if event.type == MOUSEBUTTONDOWN:
+        if pygame.mouse.get_pressed()[0]:
+        #for event in pygame.event.get():
+            #if event.type == MOUSEBUTTONDOWN:
                 shoted = pygame.sprite.spritecollide(fist, robots, True)
                 if shoted:
-                    all.remove(shoted)
-                    print "pummm"
+                   all.remove(shoted)
+                   print "pummm"
             #elif event.type == MOUSEBUTTONUP:
              #   fist.unpunch()
         time_passed = clock.tick(30)
