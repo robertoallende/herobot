@@ -1,10 +1,10 @@
 """Game brackground
 """
-# board_height = 576 
-# railone = 30% de board_height
-# railtwo = 50% de board_height
-# railthree = 70% de board_height
-# street = 90% de board_height
+# game.board_height = 576 
+# railone = 30% de game.board_height
+# railtwo = 50% de game.board_height
+# railthree = 70% de game.board_height
+# street = 90% de game.board_height
 
 import sys
 import getopt
@@ -35,7 +35,8 @@ class Text(pygame.sprite.Sprite):
     def __init__(self, text, initial_pos, center=0, color = (255, 255, 255)):
         pygame.sprite.Sprite.__init__(self)
         self.text = text
-        self.render_text = panel_font.render(text, True, color)
+        self.panel_font = load_fonts()
+        self.render_text = self.panel_font.render(text, True, color)
         self.image = self.render_text
 
         if center: 
@@ -56,16 +57,15 @@ class Text(pygame.sprite.Sprite):
 
     def update(self, time_passed, text):
         self.text = text
-        self.render_text = panel_font.render(text, True, self.color)
+        self.render_text = self.panel_font.render(text, True, self.color)
         self.image = self.render_text
         self.rect = list(self.initial_pos)
         self.width = self.render_text.get_width()
 
 class Board:
-
-    def __init__(self, screen, game=1):
+    def __init__(self, game):
         self.game = game
-        self.screen = screen
+        self.screen = self.game.screen
         self.time_passed = 0
 
         self.graph_bottom = 20
@@ -77,12 +77,11 @@ class Board:
         self.target = 100
 
         #background
-        self.background = pygame.Surface(screen.get_size())
+        self.background = pygame.Surface(self.game.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 0, 0))
 
         self.sprites = pygame.sprite.RenderUpdates()
-
 
         self.sprites.add( self.draw_background() )
         self.sprites.add( self.draw_time() )
@@ -92,32 +91,32 @@ class Board:
 #       self.draw_background()
 
     def draw_background(self):
-        b = Box([255, 0, 0], [0, 0], [screen_width, board_height ]) 
+        b = Box([255, 0, 0], [0, 0], [self.game.board_width, self.game.board_height ]) 
         return(b)
 
     def draw_score(self):
-        initial_pos = (self.graph_sides, screen_height - self.graph_bottom)
+        initial_pos = (self.graph_sides, self.game.board_height - self.graph_bottom)
         self.score_text = Text("Score: " + str(self.score) , initial_pos )
         return self.score_text
 
     def draw_time(self):
         initial_pos = (self.background.get_rect().centerx - 125 \
-                      , screen_height - self.graph_bottom)
+                      , self.game.board_height - self.graph_bottom)
         self.time_text = Text("Time Left: " + str(self.time) , initial_pos, 1 )
         return self.time_text
 
 
     def draw_target(self):
         initial_pos = (self.background.get_rect().centerx + 125 \
-                      , screen_height - self.graph_bottom)
-        self.target_text = Text("Level Target: " + str(self.time) , initial_pos, 1 )
+                      , self.game.board_height - self.graph_bottom)
+        self.target_text = Text("Required Deaths: " + str(self.time) , initial_pos, 1 )
         return self.target_text
 
 
     def draw_lives(self):
         #lives 
-        initial_pos = ( screen_width - 60 - self.graph_sides, screen_height -  \
-                          self.graph_bottom )
+        initial_pos = ( self.game.board_width - 60 - self.graph_sides, \
+                        self.game.board_height - self.graph_bottom )
         self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 1 )
         return self.lives_text
 
@@ -135,7 +134,7 @@ class Board:
 
         if self.target > 0:
             self.target -= hits
-            self.target_text.update(time_passed, "Level Target: " + str( self.target ) )
+            self.target_text.update(time_passed, "Required Deaths: " + str( self.target ) )
 
         self.time_passed -= time_passed
 
@@ -151,11 +150,9 @@ class Board:
 
 # metodo baston 
 def load_fonts():
-    global launch_timer_font,active_marbles_font,popup_font,info_font, panel_font
-    font_size = 24
-
     pygame.font.init()
-    panel_font = pygame.font.Font(None, font_size) 
+    panel_font = pygame.font.Font(None, 24) 
+    return panel_font
 
 
 def main():
@@ -171,7 +168,7 @@ def main():
     load_fonts()
 
     pygame.init()
-    screen = pygame.display.set_mode( [screen_width, screen_height] )
+    screen = pygame.display.set_mode( [self.game.board_width, self.game.board_height] )
 
     board = Board(screen)
 
