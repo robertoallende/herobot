@@ -4,6 +4,7 @@ import data
 import pygame
 from random import uniform
 from pygame.locals import *
+from shoter import Shoter
 
 RIGHT = 1
 LEFT = -1
@@ -73,74 +74,40 @@ class Alien(Being):
 def load_being(being, bodypart):
     return being+'-'+str(int(round(uniform(0,0))))+str(int(round(uniform(0,0))))+'.png'
 
-        
+ 
 def main():
-    # ver http://www.sacredchao.net/~piman/writing/sprite-tutorial.shtml
-    ##########################################################################################
-    # Esta clase es simplemente Fist de punch chimp un poco modificada
-    #para poder probar que le pasa a being cuando le pegas.
-    class Fist(pygame.sprite.Sprite):
-        """moves a clenched fist on the screen, following the mouse"""
-        def __init__(self):
-            pygame.sprite.Sprite.__init__(self) #call Sprite initializer
-            #self.image = pygame.Surface([15, 15])
-            #self.image.fill((255,0,255))
-            self.image, self.rect = data.load_image('crosshair.png')
-
-            # Make our top-left corner the passed-in location.
-            self.rect = self.image.get_rect()
-            self.punching = 0
-
-        def update(self, *args):
-            "move the fist based on the mouse position"
-            pos = pygame.mouse.get_pos()
-            self.rect.left, self.rect.bottom = pos[0] - self.rect.width/2, pos[1] + self.rect.height/2
-            if self.punching:
-                self.rect.move_ip(5, 10)
-    
-######NO USAMOS ESTA FUNCION, YA QUE SE USA UNA DEFINIDA POR BEING!!! PARA QUE CALCULE A TODOS LOS SPRITES DE LA CASE BEING
-        def punch(self, target):
-            "returns true if the fist collides with the target"
-            if not self.punching:
-                self.punching = 1
-                hitbox = self.rect.inflate(-5, -5)
-                return hitbox.colliderect(target.rect)
-        def unpunch(self):
-            "called to pull the fist back"
-            self.punching = 0
-   #fin clase chip #####################################################################
-        
-        
     pygame.init()
     screen = pygame.display.set_mode([800, 600])
     pygame.display.update()
     carril = (0,600)
+    
     being = Robot( carril, 0.4, RIGHT, 7)
-    direction = "right"
     area = screen.get_rect()
-    all = pygame.sprite.RenderUpdates()
+    
     robots = pygame.sprite.Group()
-    all.add(being)
+    shoter = pygame.sprite.Group(Shoter())
+
     robots.add(being)
-    fist = Fist()
-    all.add(fist)
+    
     pygame.mouse.set_visible(False)
     clock = pygame.time.Clock()
+    
+    screen.fill([0, 0, 0])
+    background = pygame.Surface([800, 600])
+    background.fill([0, 0, 0])
     while pygame.event.poll().type != KEYDOWN:
-        screen.fill([0, 0, 0]) # blank the screen.
         # Save time by only calling this once
-        time = pygame.time.get_ticks() 
+         
         if pygame.mouse.get_pressed()[0]:
-        #for event in pygame.event.get():
-            #if event.type == MOUSEBUTTONDOWN:
-                shoted = pygame.sprite.spritecollide(fist, robots, True)
+                shoted = pygame.sprite.spritecollide(shoter.sprites()[0], robots, True)
                 if shoted:
-                   all.remove(shoted)
+                   robots.remove(shoted)
                    print "pummm"
             #elif event.type == MOUSEBUTTONUP:
              #   fist.unpunch()
         time_passed = clock.tick(30)
-        all.update(time_passed)
+        robots.update(time_passed)
+        shoter.update()
         #fist.update()
         
         #se fija si llego al borde de la pantalla, en tal caso tira una moneda y vuelve a largar
@@ -154,11 +121,13 @@ def main():
             else:
                 being.set_pos((800,600))
                 being.set_direction(LEFT)
-                
-       # screen.blit(being.image, being.rect)
-        all.draw(screen)
+        rectlist = robots.draw(screen)
+        shoter.draw(screen)
+
         pygame.display.update()
 
+        robots.clear(screen, background)
+        shoter.clear(screen, background)
 if __name__ == "__main__":
     main()
 
