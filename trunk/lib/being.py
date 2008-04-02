@@ -247,14 +247,14 @@ def main():
             self.rect.midtop = pos
             if self.punching:
                 self.rect.move_ip(5, 10)
-    ######NO USAMOS ESTA FUNCION, YA QUE SE USA UNA DEFINIDA POR BEING!!! PARA QUE CALCULE A TODOS LOS SPRITES DE LA CASE BEING
+    
+######NO USAMOS ESTA FUNCION, YA QUE SE USA UNA DEFINIDA POR BEING!!! PARA QUE CALCULE A TODOS LOS SPRITES DE LA CASE BEING
         def punch(self, target):
             "returns true if the fist collides with the target"
             if not self.punching:
                 self.punching = 1
                 hitbox = self.rect.inflate(-5, -5)
                 return hitbox.colliderect(target.rect)
-
         def unpunch(self):
             "called to pull the fist back"
             self.punching = 0
@@ -268,7 +268,6 @@ def main():
     being = Human(carril)
     direction = "right"
     area = screen.get_rect()
-    
     fist = Fist()
     while pygame.event.poll().type != KEYDOWN:
         screen.fill([0, 0, 0]) # blank the screen.
