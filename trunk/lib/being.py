@@ -9,6 +9,7 @@ from shoter import Shoter
 RIGHT = 1
 LEFT = -1
 ROBOT_IMAGES = 2
+
 #para probarlo hacer click sobre el objeto que da vueltas por ahi!!! y da vueltas como zaino!!!
 #TODO: *decidir que hacen cuadno se les dispara ( por ahora los humanos giran como el juego punch chimp)
 #      *comentar el codigo 
@@ -54,19 +55,21 @@ class Being(pygame.sprite.Sprite):
         self.rect.bottom = newpos[1]
         self.rect.left = newpos[0]
 
- 
+#TODO:fix it
 class Robot(Being):
-    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1):
-        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
+        images = ['robot-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
         Being.__init__(self, pos, images, speed, direction,speed_change)
 
 
 class Human(Being):
-    def __init__(self, pos, images, speed=1, direction=LEFT, speed_change=1):
+    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
+        images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
         Being.__init__(self, pos, images, speed ,direction, speed_change)
 
 class Alien(Being):
-    def __init__(self, pos, images, speed=1, direction=LEFT, speed_change=1):
+    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
+        images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
         Being.__init__(self, pos, images, speed, direction, speed_change)
 
 
@@ -81,7 +84,7 @@ def main():
     pygame.display.update()
     carril = (0,600)
     
-    being = Robot( carril, 0.4, RIGHT, 7)
+    being = Robot( carril, 0.4, RIGHT, 7, 'large')
     area = screen.get_rect()
     
     robots = pygame.sprite.Group()
