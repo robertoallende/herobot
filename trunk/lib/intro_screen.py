@@ -25,7 +25,6 @@ def get_phrases(string, size):
 				actual_word = actual_word.replace(' '*i, ' '*(i+1),  size - len(actual_word))
 				i += 1
 		result.append(actual_word)
-		print result
 	return result
 
 class Board:
@@ -74,7 +73,6 @@ def presentation(text, font, screen):
 		if last_phrase:
 			s  = last_phrase.sprite
 			if phrases and s.rect[1]+s.height < SCREEN_SIZE[1] - 2:
-				print phrases[0].text, s.rect[1], s.height
 				last_phrase.add(phrases[0])
 				screen_phrases.add(phrases.pop(0))
 		screen.fill((0,0,0))

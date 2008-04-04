@@ -19,12 +19,13 @@ ROBOT_IMAGES = 2
 
 
 class Being(pygame.sprite.Sprite):
-    def __init__(self, pos, images, speed=1, direction=LEFT, speed_change=1):
+    def __init__(self, pos, screen_width, images, speed=1, direction=LEFT, speed_change=1):
         pygame.sprite.Sprite.__init__(self)
         self.image, self.rect =  data.load_image(images[0])
         self.actual_img = 0
         self.images = [data.load_image(img)[0] for img in images]
         self.set_pos(pos)
+        self.screen_width = screen_width
         self.speed = speed
         self.speed_change = speed_change
         self.alive = True
@@ -42,7 +43,12 @@ class Being(pygame.sprite.Sprite):
                 self.image = self.images[self.actual_img]
                 self.last_img_change = 0
             self.last_img_change += 1
-            self.rect.left = self.rect.left + self.direction*time_passed*self.speed
+            
+            #Si se llega a uno de los bordes se pega la vuelta
+            if (self.screen_width < self.rect.left and self.direction == RIGHT) or \
+               (self.rect.left + self.rect.width < 0 and self.direction == LEFT):
+               self.set_direction(-self.direction)
+	    self.rect.left = self.rect.left + self.direction*time_passed*self.speed
         else:
                 pass
 
@@ -55,22 +61,27 @@ class Being(pygame.sprite.Sprite):
         self.rect.bottom = newpos[1]
         self.rect.left = newpos[0]
 
-#TODO:fix it
+#TODO:fix it, cuando tengamos las imagenes hay que actualizarlo
 class Robot(Being):
-    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
-        images = ['robot-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        Being.__init__(self, pos, images, speed, direction,speed_change)
+    def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
+        #images = ['robot-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        Being.__init__(self, pos, screen_width, images, speed, direction,speed_change)
 
 
 class Human(Being):
-    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
-        images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        Being.__init__(self, pos, images, speed ,direction, speed_change)
+    def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
+        #images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+
+        Being.__init__(self, pos, screen_width, images, speed ,direction, speed_change)
 
 class Alien(Being):
-    def __init__(self, pos, speed=1, direction=LEFT, speed_change=1, size='small'):
-        images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        Being.__init__(self, pos, images, speed, direction, speed_change)
+    def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
+        #images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+
+        Being.__init__(self, pos, screen_width, images, speed, direction, speed_change)
 
 
 
@@ -84,7 +95,7 @@ def main():
     pygame.display.update()
     carril = (0,600)
     
-    being = Robot( carril, 0.4, RIGHT, 7, 'large')
+    being = Robot( carril, 800, 0.4, RIGHT, 7, 'large')
     area = screen.get_rect()
     
     robots = pygame.sprite.Group()
@@ -116,14 +127,14 @@ def main():
         #se fija si llego al borde de la pantalla, en tal caso tira una moneda y vuelve a largar
         #el sprite por la izquierda o la derecha segun la moneda
         #old_direction = direction
-        if (being.rect.left >= area.width and being.direction == RIGHT) or (being.rect.left + being.rect.width <= 0 and being.direction == LEFT):
-            prob = int(round(uniform(1,2)))
-            if prob == 1:
-                being.set_pos((0,600))
-                being.set_direction(RIGHT)
-            else:
-                being.set_pos((800,600))
-                being.set_direction(LEFT)
+        #if (being.rect.left >= area.width and being.direction == RIGHT) or (being.rect.left + being.rect.width <= 0 and being.direction == LEFT):
+            #prob = int(round(uniform(1,2)))
+            #if prob == 1:
+                #being.set_pos((0,600))
+                #being.set_direction(RIGHT)
+            #else:
+                #being.set_pos((800,600))
+                #being.set_direction(LEFT)
         rectlist = robots.draw(screen)
         shoter.draw(screen)
 

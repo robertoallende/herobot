@@ -144,7 +144,7 @@ class Board:
         self.sprites.clear(self.screen, self.background)
 
     def draw(self):
-        self.sprites.draw(self.screen)
+        return self.sprites.draw(self.screen)
 
     def end(self):
         if self.time == 0:
