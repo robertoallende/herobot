@@ -34,10 +34,10 @@ class Board:
 #Esta clase implementa frases que van subiendo en la pantalla achicandose
 #a medida que avanza
 class Phrase(pygame.sprite.Sprite):
-	def __init__(self, text, font, color, initial_pos, velocity):
+	def __init__(self, text, font, color, initial_pos, speed):
 		pygame.sprite.Sprite.__init__(self)
 		self.text = text
-		self.velocity = velocity
+		self.speed = speed
 		self.render_text = font.render(text, True, color)
 		self.image = self.render_text
 		self.rect = list(initial_pos)
@@ -49,7 +49,7 @@ class Phrase(pygame.sprite.Sprite):
 		return self.text
 	
 	def update(self, time_passed):
-		self.rect[1] -= time_passed*self.velocity
+		self.rect[1] -= time_passed*self.speed
 
 		#esta en la pantalla asi que hay que dibujarlo
 		if 0 < self.rect[1]+self.height and self.rect[1] < SCREEN_SIZE[1]:
@@ -58,7 +58,8 @@ class Phrase(pygame.sprite.Sprite):
 			self.rect[0] = (SCREEN_SIZE[0] - self.width)/2
 			self.image = pygame.transform.scale(self.render_text, (int(self.width), int(self.height)))
 		elif self.rect[1]+self.height <= 0:
-			self.alive = False
+			for grp in self.groups():
+	   			grp.remove(self)
 
 #Deberia mostrar algo parecido a los titulos de star wars, pero falta tunearlo un poco con las velocidades
 def presentation(text, font, screen):
@@ -78,8 +79,8 @@ def presentation(text, font, screen):
 		screen.fill((0,0,0))
 		time_passed = clock.tick(30)
 		screen_phrases.update(time_passed)
-		screen_phrases.draw(screen)
-		pygame.display.update()
+		rectlist = screen_phrases.draw(screen)
+		pygame.display.update(rectlist)
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
@@ -94,7 +95,6 @@ def main():
 	font = pygame.font.Font( filepath( font_filename ), 100)
 	screen = pygame.display.set_mode(SCREEN_SIZE)
 	presentation(phrase, font, screen)
-	screen.update()
 		
 if __name__ == "__main__":
 	main()
