@@ -3,6 +3,7 @@
 import sys
 import getopt
 import pygame
+from pygame.locals import *
 from string import split, join
 
 #TODO: mejorar el efecto del texto, ver el fondo y otros FX, ver bien el tema de los parametros
@@ -62,8 +63,8 @@ class Phrase(pygame.sprite.Sprite):
 	   			grp.remove(self)
 
 #Deberia mostrar algo parecido a los titulos de star wars, pero falta tunearlo un poco con las velocidades
-def presentation(text, font, screen):
-	phrases = [Phrase(p, font, (255, 200, 0), SCREEN_SIZE, 0.05) for p in get_phrases(text, 30)]
+def presentation(text, font, screen, speed=0.05):
+	phrases = [Phrase(p, font, (255, 200, 0), SCREEN_SIZE, speed) for p in get_phrases(text, 30)]
 	last_phrase = pygame.sprite.GroupSingle()
 	screen_phrases = pygame.sprite.RenderUpdates()
 	
@@ -71,6 +72,9 @@ def presentation(text, font, screen):
 	last_phrase.add(phrases[0])
 	screen_phrases.add(phrases.pop(0))
 	while screen_phrases:
+		for event in pygame.event.get():
+			if event.type == KEYDOWN:
+				return
 		if last_phrase:
 			s  = last_phrase.sprite
 			if phrases and s.rect[1]+s.height < SCREEN_SIZE[1] - 2:
@@ -81,6 +85,8 @@ def presentation(text, font, screen):
 		screen_phrases.update(time_passed)
 		rectlist = screen_phrases.draw(screen)
 		pygame.display.update(rectlist)
+	
+	while pygame.event.wait().type != KEYDOWN:pass
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
