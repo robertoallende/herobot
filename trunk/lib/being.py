@@ -9,6 +9,13 @@ from shoter import Shoter
 RIGHT = 1
 LEFT = -1
 ROBOT_IMAGES = 2
+FREQ = 44100   # same as audio CD
+BITSIZE = -16  # unsigned 16 bit
+CHANNELS = 2   # 1 == mono, 2 == stereo
+BUFFER = 1024  # audio buffer size in no. of samples
+FRAMERATE = 30 # how often to check if playback has finished
+soundfile='./../data/disparocorto.wav'
+soundfile2='./../data/herido.wav'
 
 #para probarlo hacer click sobre el objeto que da vueltas por ahi!!! y da vueltas como zaino!!!
 #TODO: *decidir que hacen cuadno se les dispara ( por ahora los humanos giran como el juego punch chimp)
@@ -90,8 +97,12 @@ def load_being(being, bodypart):
 
  
 def main():
+    pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
     pygame.init()
     screen = pygame.display.set_mode([800, 600])
+    sound = pygame.mixer.Sound(soundfile)
+    sound2 = pygame.mixer.Sound(soundfile2)
+
     pygame.display.update()
     carril = (0,600)
     
@@ -113,10 +124,12 @@ def main():
         # Save time by only calling this once
          
         if pygame.mouse.get_pressed()[0]:
+                sound.play() 
                 shoted = pygame.sprite.spritecollide(shoter.sprites()[0], robots, True)
                 if shoted:
                    robots.remove(shoted)
                    print "pummm"
+                   sound2.play()
             #elif event.type == MOUSEBUTTONUP:
              #   fist.unpunch()
         time_passed = clock.tick(30)
