@@ -156,8 +156,22 @@ class HighScore(pygame.sprite.Sprite):
         self.alive       = True
 
 
-def showHighScores( screen, background, font, score, reason_game_end ):
+def showHighScores( screen, score, reason_game_end ):
+
+    from data import load_image, filepath
+
     gameScore = Score()
+
+    FONT_NAME   = 'GROOT___.TTF'
+    FONT_SIZE   = 24
+    font       = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE)
+    
+    background_image_filename = 'robot.gif'
+
+    SCREEN_SIZE = (800,600)
+    background, a = load_image( background_image_filename )
+    screen.blit(background, (0, 0))
+
 
     INITIAL_POS  = (130,110)
     RECORD_POS_X = 520
@@ -273,25 +287,18 @@ def showHighScores( screen, background, font, score, reason_game_end ):
 ########################################################################
 # metodo baston·
 def main():
-    from data import load_image, filepath
+
 
     SCREEN_SIZE = (800,600)
     SCORE       = 102
     REASON_GAME_END = "You Louse becose nobody can't kill to wally"
-    FONT_NAME   = 'GROOT___.TTF'
-    FONT_SIZE   = 24
-    background_image_filename = 'background.png'
 
     pygame.init()
     screen = pygame.display.set_mode( SCREEN_SIZE )
 
     #background, a = load_image( background_image_filename )
-    background = pygame.Surface( list( SCREEN_SIZE ) )
-    background.fill([255, 255, 255])
-    font       = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE)
 
-    screen.fill(  (255,255,255) )
-    showHighScores( screen, background, font, SCORE, REASON_GAME_END )
+    showHighScores( screen, SCORE, REASON_GAME_END )
     print ">>>>>>>>>>>> Salio <<<<<<<<<<<<<<<<<<<"
     while pygame.event.poll().type != KEYDOWN: pygame.time.delay(10)
 
