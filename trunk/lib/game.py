@@ -12,6 +12,17 @@ from data import filepath
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
+# Level Generator
+levels = []
+for i in range(10)[1:]:
+    d = {}
+    d['total_time'] = 20 - 5*i 
+    d['cant_robots'] = 10
+    d['cant_human'] = (20 + i ) 
+    d['min_human_to_kill']=  5 + i 
+    d['max_robot_to_kill']=  3 
+    d['stuff_speed'] =  240 * (1.2**i) 
+    levels.append(d)
 
 class Game:
     def __init__(self, screen_width, screen_height, screen):
@@ -26,6 +37,9 @@ class Game:
         self.board_width = screen_width
         self.font_size = 24
         self.screen = screen
+
+        self.robot_shoted = 0
+        self.human_shoted = 0
 
 
     def run_intro(self):
@@ -92,7 +106,7 @@ class Game:
         self.human_render = pygame.sprite.RenderUpdates()
 
         #TODO: revisar parametros
-        self.board = Board(self, 0, self.total_time, 3, self.min_human_to_kill)
+        self.board = Board(self, 0, self.total_time, 3, self.min_human_to_kill, self.cant_human)
 
     #TODO: revisar, no es adecuado el metodo
     def stuff_arrival(self, time_passed_seconds):
@@ -126,18 +140,16 @@ class Game:
                    print "Uno menos...", len(human_shoted)
 
     def run_level(self, level):
-        load_fonts()
-        self.board = Board(self)
         clock = pygame.time.Clock()
         self.shoter = pygame.sprite.RenderUpdates(Shoter())
 
         #game parameters
-        self.total_time = 30 - 5*level
-        self.cant_robots = 5*level
-        self.cant_human = 1 + level
-        self.min_human_to_kill = 8 + level
-        self.max_robot_to_kill = 3
-        self.stuff_speed = 240 * (1.2**level)
+        self.total_time = levels[level]['total_time']
+        self.cant_robots = levels[level]['cant_robots']
+        self.cant_human = levels[level]['cant_human']
+        self.min_human_to_kill = levels[level]['min_human_to_kill']
+        self.max_robot_to_kill = levels[level]['max_robot_to_kill']
+        self.stuff_speed = levels[level]['stuff_speed']
 
         self.generate_stuff()
         #self.stuff_arrival()
@@ -147,8 +159,10 @@ class Game:
             
             # TODO: fijarse si hay que ingresar personajes a la pantalla
             # fijarse si se disparo a alguien ver parametros
-            
-            self.board.update(time_passed_seconds, 1, 0)
+
+            self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted)
+            self.human_shoted = 0 ; self.robot_shoted = 0
+
             self.human_render.update(time_passed_seconds)
             self.robot_render.update(time_passed_seconds)
             self.shoter.update()
@@ -167,6 +181,12 @@ class Game:
             self.human_render.clear(self.screen, self.board.background)
             self.robot_render.clear(self.screen, self.board.background)
             self.shoter.clear(self.screen, self.board.background)
+
+            if self.board.end():
+                print 'Ya esta'
+                print self.board.end_reason()
+                break
+
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 

@@ -65,7 +65,7 @@ class Text(pygame.sprite.Sprite):
         self.width = self.render_text.get_width()
 
 class Board:
-    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100):
+    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100, humans= 10):
         self.game = game
         self.screen = self.game.screen
         self.time_passed = 0
@@ -77,6 +77,7 @@ class Board:
         self.time = time
         self.lives = lives
         self.target = target
+        self.humans = humans
 
         #background
         self.background = pygame.Surface(self.game.screen.get_size())
@@ -129,6 +130,8 @@ class Board:
         if hits > 0:
             self.score += hits * 10
             self.score_text.update(time_passed, "Score: " + str( self.score ) )
+            self.humans -= hits
+            print self.humans
 
         if self.target > 0:
             self.target -= hits
@@ -151,16 +154,20 @@ class Board:
             return True
         elif self.lives == 0:
             return True
+        elif self.humans == 0:
+            return True
         else:
             return False
 
     def end_reason(self):
         if self.lives == 0:
-            return 'kill robot' 
+            return 'killed too many robots' 
         elif self.time == 0 and self.target > 0:
-            return 'not enough' 
+            return 'not killed enough humans' 
         elif self.time == 0 and self.target == 0:
             return 'end level'
+        elif self.humans == 0:
+            return 'end level' 
 
 
 # metodo baston 

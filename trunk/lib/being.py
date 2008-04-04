@@ -65,7 +65,7 @@ class Being(pygame.sprite.Sprite):
 class Robot(Being):
     def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
         #images = ['robot-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        images = ['robot-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
         Being.__init__(self, pos, screen_width, images, speed, direction,speed_change)
 
 
