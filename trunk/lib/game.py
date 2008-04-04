@@ -14,9 +14,9 @@ bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
 # Level Generator
 levels = []
-for i in range(10)[1:]:
+for i in range(100)[1:]:
     d = {}
-    d['total_time'] = 30 - 5*i 
+    d['total_time'] = 30 #- 5*i 
     d['cant_robots'] = 10
     d['cant_human'] = (20 + i ) 
     d['min_human_to_kill']=  5 + i 
@@ -186,10 +186,17 @@ class Game:
             self.shoter.clear(self.screen, self.board.background)
 
             if self.board.end():
-                print 'Ya esta'
-                print self.board.end_reason()
                 break
 
+        reason = self.board.end_reason()
+        if reason == 'killed too many robots':
+            print 'perdiste ' + reason
+
+        if reason == 'not killed enough humans':
+            print 'perdiste ' + reason
+
+        if reason == 'end level':
+            self.run_level(level + 1)
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
