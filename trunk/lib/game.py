@@ -20,7 +20,6 @@ for i in range(100)[1:]:
     d['cant_robots'] = 10
     d['cant_human'] = (20 + i ) 
     d['min_human_to_kill']=  5 + i 
-    d['max_robot_to_kill']=  10
     d['stuff_speed'] =  180 * (1.2**i) 
     levels.append(d)
 
@@ -37,6 +36,8 @@ class Game:
         self.board_width = screen_width
         self.font_size = 24
         self.screen = screen
+
+        self.max_robot_to_kill =  10
 
         self.robot_shoted = 0
         self.human_shoted = 0
@@ -151,7 +152,7 @@ class Game:
         self.cant_robots = levels[level]['cant_robots']
         self.cant_human = levels[level]['cant_human']
         self.min_human_to_kill = levels[level]['min_human_to_kill']
-        self.max_robot_to_kill = levels[level]['max_robot_to_kill']
+#        self.max_robot_to_kill = levels[level]['max_robot_to_kill']
         self.stuff_speed = levels[level]['stuff_speed']
 
         self.level = level
@@ -198,6 +199,7 @@ class Game:
             print 'perdiste ' + reason
 
         if reason == 'end level':
+            self.max_robot_to_kill = self.board.lives
             self.run_level(level + 1)
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'

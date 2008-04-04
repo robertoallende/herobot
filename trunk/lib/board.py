@@ -10,11 +10,11 @@ import sys
 import getopt
 import pygame
 from pygame.locals import *
-
+import data
 
 class Box(pygame.sprite.Sprite):
 
-    def __init__(self, color, initial_position, surface = [200, 200] ):
+    def __init__(self,initial_position, surface = [200, 200],level=20 ):
         # All sprite classes should extend pygame.sprite.Sprite. This
         # gives you several important internal methods that you probably
         # don't need or want to write yourself. Even if you do rewrite
@@ -24,12 +24,14 @@ class Box(pygame.sprite.Sprite):
       
         # Create the image that will be displayed and fill it with the
         # right color.
-        self.image = pygame.Surface(surface)
-        self.image.fill(color)
-
+        self.surface = pygame.Surface(surface)
+        #self.image.fill(color)
+        self.level = level%3
+        self.image,self.rect = data.load_image('fondo-'+str(self.level)+'.png')
         # Make our top-left corner the passed-in location.
-        self.rect = self.image.get_rect()
+        #self.rect = self.image.get_rect()
         self.rect.topleft = initial_position
+        self.surface.blit(self.image, self.rect)
 
 class Text(pygame.sprite.Sprite):
     def __init__(self, text, initial_pos, paragraph=0, color = (255, 255, 255)):
@@ -95,7 +97,7 @@ class Board:
         self.sprites.add( self.draw_level() )
 
     def draw_background(self):
-        b = Box([255, 0, 0], [0, 0], [self.game.board_width, self.game.board_height ]) 
+        b = Box( [0, 0], [self.game.board_width, self.game.board_height ], self.level) 
         return(b)
 
     def draw_score(self):
