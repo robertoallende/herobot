@@ -65,7 +65,7 @@ class Text(pygame.sprite.Sprite):
         self.width = self.render_text.get_width()
 
 class Board:
-    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100, humans= 10):
+    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100, humans= 10, level=1):
         self.game = game
         self.screen = self.game.screen
         self.time_passed = 0
@@ -78,6 +78,7 @@ class Board:
         self.lives = lives
         self.target = target
         self.humans = humans
+        self.level = level
 
         #background
         self.background = pygame.Surface(self.game.screen.get_size())
@@ -91,6 +92,7 @@ class Board:
         self.sprites.add( self.draw_score() )
         self.sprites.add( self.draw_target() )
         self.sprites.add( self.draw_lives() )
+        self.sprites.add( self.draw_level() )
 
     def draw_background(self):
         b = Box([255, 0, 0], [0, 0], [self.game.board_width, self.game.board_height ]) 
@@ -102,13 +104,13 @@ class Board:
         return self.score_text
 
     def draw_time(self):
-        initial_pos = (self.background.get_rect().centerx - 125 \
+        initial_pos = (self.background.get_rect().centerx - 175 \
                       , self.game.screen_height - self.graph_bottom)
         self.time_text = Text("Time Left: " + str(self.time) , initial_pos, 1 )
         return self.time_text
 
     def draw_target(self):
-        initial_pos = (self.background.get_rect().centerx + 125 \
+        initial_pos = (self.background.get_rect().centerx + 145 \
                       , self.game.screen_height - self.graph_bottom)
         self.target_text = Text("Required Deaths: " + str(self.time) , initial_pos, 1 )
         return self.target_text
@@ -119,6 +121,12 @@ class Board:
                         self.game.screen_height - self.graph_bottom )
         self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 2 )
         return self.lives_text
+
+    def draw_level(self):
+        initial_pos = (self.background.get_rect().centerx - 20 \
+                      , self.game.screen_height - self.graph_bottom)
+        self.level_text = Text("Level: " + str(self.level) , initial_pos, 1 )
+        return self.level_text
 
     def update(self, time_passed, hits, lives ):
         '''Blit everything to the screen'''

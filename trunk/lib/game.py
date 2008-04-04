@@ -107,7 +107,7 @@ class Game:
 
         #TODO: revisar parametros
 ##################
-        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, self.min_human_to_kill, self.cant_human)
+        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, self.min_human_to_kill, self.cant_human, self.level)
 
     #TODO: revisar, no es adecuado el metodo
     def stuff_arrival(self, time_passed_seconds):
@@ -153,6 +153,8 @@ class Game:
         self.min_human_to_kill = levels[level]['min_human_to_kill']
         self.max_robot_to_kill = levels[level]['max_robot_to_kill']
         self.stuff_speed = levels[level]['stuff_speed']
+
+        self.level = level
 
         self.generate_stuff()
         #self.stuff_arrival()
