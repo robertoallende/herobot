@@ -16,12 +16,12 @@ img_size = ['small', 'medium', 'large']
 levels = []
 for i in range(10)[1:]:
     d = {}
-    d['total_time'] = 20 - 5*i 
+    d['total_time'] = 30 - 5*i 
     d['cant_robots'] = 10
     d['cant_human'] = (20 + i ) 
     d['min_human_to_kill']=  5 + i 
-    d['max_robot_to_kill']=  30000 
-    d['stuff_speed'] =  240 * (1.2**i) 
+    d['max_robot_to_kill']=  10
+    d['stuff_speed'] =  180 * (1.2**i) 
     levels.append(d)
 
 class Game:
