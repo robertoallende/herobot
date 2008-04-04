@@ -9,6 +9,7 @@ from being import Robot, Human, Alien, LEFT, RIGHT
 from shoter import Shoter
 from intro_screen import presentation
 from data import filepath
+from score import showHighScores
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -106,9 +107,8 @@ class Game:
         self.robot_render = pygame.sprite.RenderUpdates()
         self.human_render = pygame.sprite.RenderUpdates()
 
-        #TODO: revisar parametros
-##################
-        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, self.min_human_to_kill, self.cant_human, self.level)
+        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, \
+                           self.min_human_to_kill, self.cant_human, self.level)
 
     #TODO: revisar, no es adecuado el metodo
     def stuff_arrival(self, time_passed_seconds):
@@ -154,7 +154,6 @@ class Game:
         self.cant_robots = levels[level]['cant_robots']
         self.cant_human = levels[level]['cant_human']
         self.min_human_to_kill = levels[level]['min_human_to_kill']
-#        self.max_robot_to_kill = levels[level]['max_robot_to_kill']
         self.stuff_speed = levels[level]['stuff_speed']
 
         self.level = level
@@ -196,9 +195,11 @@ class Game:
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
             print 'perdiste ' + reason
+            showHighScores( self.screen, self.board.score, reason )
 
         if reason == 'not killed enough humans':
             print 'perdiste ' + reason
+            showHighScores( self.screen, self.board.score, reason )
 
         if reason == 'end level':
             self.max_robot_to_kill = self.board.lives
@@ -226,7 +227,4 @@ def load_fonts():
 
 if __name__ == "__main__":
     main()
-
-
-
 
