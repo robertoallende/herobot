@@ -15,13 +15,14 @@ bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
 # Level Generator
 levels = []
-for i in range(100)[1:]:
+for i in xrange(1,100):
     d = {}
     d['total_time'] = 30 #- 5*i 
-    d['cant_robots'] = 10
-    d['cant_human'] = (20 + i ) 
+    d['cant_robots'] = 40
+    d['cant_human'] = (50 + i ) 
     d['min_human_to_kill']=  5 + i 
-    d['stuff_speed'] =  180 * (1.2**i) 
+    d['human_speed'] =  180 * (1.2**i)
+    d['robot_speed'] =  120 * (1.2**i)  
     levels.append(d)
 
 class Game:
@@ -75,7 +76,7 @@ class Game:
                     direction = RIGHT
                     pos = (-70, bottom_rail[i])
                 self.robot_rail[i].add(Robot(pos, self.board_width, \
-                                  self.stuff_speed, direction, 10, img_size[i]))
+                                  self.robot_speed, direction, 10, img_size[i]))
             
             cant_gen = len(self.robot_rail[i].sprites())
             cant_robots_gen += cant_gen
@@ -93,7 +94,7 @@ class Game:
                     direction = RIGHT
                     pos = (-70, bottom_rail[i])
                 self.human_rail[i].add(Human(pos, self.board_width, \
-                                  self.stuff_speed, direction, 10, img_size[i]))
+                                  self.human_speed, direction, 10, img_size[i]))
             self.human_last_arrival.append(self.total_time)
 
             cant_gen = len(self.human_rail[i].sprites())
@@ -154,7 +155,8 @@ class Game:
         self.cant_robots = levels[level]['cant_robots']
         self.cant_human = levels[level]['cant_human']
         self.min_human_to_kill = levels[level]['min_human_to_kill']
-        self.stuff_speed = levels[level]['stuff_speed']
+        self.human_speed = levels[level]['human_speed']
+        self.robot_speed = levels[level]['robot_speed']
 
         self.level = level
 
