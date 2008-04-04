@@ -20,7 +20,7 @@ for i in range(10)[1:]:
     d['cant_robots'] = 10
     d['cant_human'] = (20 + i ) 
     d['min_human_to_kill']=  5 + i 
-    d['max_robot_to_kill']=  3 
+    d['max_robot_to_kill']=  30000 
     d['stuff_speed'] =  240 * (1.2**i) 
     levels.append(d)
 
@@ -106,7 +106,8 @@ class Game:
         self.human_render = pygame.sprite.RenderUpdates()
 
         #TODO: revisar parametros
-        self.board = Board(self, 0, self.total_time, 3, self.min_human_to_kill, self.cant_human)
+##################
+        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, self.min_human_to_kill, self.cant_human)
 
     #TODO: revisar, no es adecuado el metodo
     def stuff_arrival(self, time_passed_seconds):
@@ -133,11 +134,13 @@ class Game:
                 if robot_shoted:
                    self.robot_render.remove(robot_shoted)
                    print "pummm", len(robot_shoted)
+                   self.robot_shoted += 1
 
                 human_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.human_render, True)
                 if human_shoted:
                    self.human_render.remove(human_shoted)
                    print "Uno menos...", len(human_shoted)
+                   self.human_shoted += 1
 
     def run_level(self, level):
         clock = pygame.time.Clock()
