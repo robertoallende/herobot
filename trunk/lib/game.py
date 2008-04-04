@@ -52,26 +52,38 @@ class Game:
             
             #Genero los personajes de todo el nivel, revisar pues el ultimo rail deberia ser lo que queda y no un random
             for cant in xrange(randint(0,self.cant_robots - cant_robots_gen)):
-                self.robot_rail[i].add(Robot((0, bottom_rail[i]), self.board_width, \
-                                  self.stuff_speed, LEFT, 10, img_size[i]))
+                if randint(0,1):
+                    direction = LEFT
+                    pos = (self.screen_width+70, bottom_rail[i])
+                else:
+                    direction = RIGHT
+                    pos = (-70, bottom_rail[i])
+                self.robot_rail[i].add(Robot(pos, self.board_width, \
+                                  self.stuff_speed, direction, 10, img_size[i]))
             
             cant_gen = len(self.robot_rail[i].sprites())
             cant_robots_gen += cant_gen
             if cant_gen:
-                self.robot_arrival.append(int(self.total_time*0.8/cant_gen))
+                self.robot_arrival.append(self.total_time* 0.8/cant_gen)
             else:
                 self.robot_arrival.append(self.total_time)
-            self.robot_last_arrival.append(0)
+            self.robot_last_arrival.append(self.total_time)
 
             for cant in xrange(randint(0, self.cant_human - cant_humans_gen)):
-                self.human_rail[i].add(Human((0, bottom_rail[i]), self.board_width, \
-                                  self.stuff_speed, LEFT, 10, img_size[i]))
-            self.human_last_arrival.append(0)
+                if randint(0,1):
+                    direction = LEFT
+                    pos = (self.screen_width-70, bottom_rail[i])
+                else:
+                    direction = RIGHT
+                    pos = (-70, bottom_rail[i])
+                self.human_rail[i].add(Human(pos, self.board_width, \
+                                  self.stuff_speed, direction, 10, img_size[i]))
+            self.human_last_arrival.append(self.total_time)
 
             cant_gen = len(self.human_rail[i].sprites())
             cant_humans_gen += cant_gen
             if cant_gen:
-                self.human_arrival.append(int(self.total_time*0.8/cant_gen))
+                self.human_arrival.append(self.total_time*0.8/cant_gen)
             else:
                 self.human_arrival.append(self.total_time)
 
@@ -83,23 +95,24 @@ class Game:
         self.board = Board(self, 0, self.total_time, 3, self.min_human_to_kill)
 
     #TODO: revisar, no es adecuado el metodo
-    def stuff_arrival(self, time_passed):
+    def stuff_arrival(self, time_passed_seconds):
         for i in range(3):
-            self.robot_last_arrival[i] += time_passed
+            self.robot_last_arrival[i] += time_passed_seconds
             if self.robot_arrival[i] < self.robot_last_arrival[i] and self.robot_rail[i]:
+                    print "Ingreso robot"
                     robot = self.robot_rail[i].sprites()[0]
                     self.robot_render.add(robot)
                     self.robot_rail[i].remove(robot)
                     self.robot_last_arrival[i] = 0
 
-            self.human_last_arrival[i] += time_passed
+            self.human_last_arrival[i] += time_passed_seconds
             if self.human_arrival[i] < self.human_last_arrival[i] and self.human_rail[i]:
                     human = self.human_rail[i].sprites()[0]
                     self.human_render.add(human)
                     self.human_rail[i].remove(human)
                     self.human_last_arrival[i] = 0
 
-    #completar con las actualizaciones de board y demás yerbas
+    #completar con las actualizaciones de board y demas yerbas
     def shot(self):
         if pygame.mouse.get_pressed()[0]:
                 robot_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.robot_render, True)
@@ -119,12 +132,12 @@ class Game:
         self.shoter = pygame.sprite.RenderUpdates(Shoter())
 
         #game parameters
-        self.total_time = 3000 - 5*level
+        self.total_time = 30 - 5*level
         self.cant_robots = 5*level
         self.cant_human = 1 + level
         self.min_human_to_kill = 8 + level
         self.max_robot_to_kill = 3
-        self.stuff_speed = 0.4 * (1.2**level)
+        self.stuff_speed = 240 * (1.2**level)
 
         self.generate_stuff()
         #self.stuff_arrival()
@@ -136,10 +149,10 @@ class Game:
             # fijarse si se disparo a alguien ver parametros
             
             self.board.update(time_passed_seconds, 1, 0)
-            self.human_render.update(time_passed)
-            self.robot_render.update(time_passed)
+            self.human_render.update(time_passed_seconds)
+            self.robot_render.update(time_passed_seconds)
             self.shoter.update()
-            self.stuff_arrival(time_passed)
+            self.stuff_arrival(time_passed_seconds)
 
             self.shot()
             #falta ver si se termino el nivel

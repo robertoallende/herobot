@@ -36,7 +36,7 @@ class Being(pygame.sprite.Sprite):
             self.image = self.images[0]
         #tomo el screen y sus medidas
        
-    def update(self,time_passed):
+    def update(self,time_passed_seconds):
         if self.alive:
             if  self.speed_change < self.last_img_change:
                 self.actual_img = (self.actual_img  + 1) % len(self.images)
@@ -48,7 +48,7 @@ class Being(pygame.sprite.Sprite):
             if (self.screen_width < self.rect.left and self.direction == RIGHT) or \
                (self.rect.left + self.rect.width < 0 and self.direction == LEFT):
                self.set_direction(-self.direction)
-	    self.rect.left = self.rect.left + self.direction*time_passed*self.speed
+	    self.rect.left = self.rect.left + self.direction*time_passed_seconds*self.speed
         else:
                 pass
 
@@ -95,7 +95,7 @@ def main():
     pygame.display.update()
     carril = (0,600)
     
-    being = Robot( carril, 800, 0.4, RIGHT, 7, 'large')
+    being = Robot( carril, 800, 240, RIGHT, 7, 'large')
     area = screen.get_rect()
     
     robots = pygame.sprite.Group()
@@ -120,7 +120,8 @@ def main():
             #elif event.type == MOUSEBUTTONUP:
              #   fist.unpunch()
         time_passed = clock.tick(30)
-        robots.update(time_passed)
+        time_passed_seconds = time_passed / 1000.0
+        robots.update(time_passed_seconds)
         shoter.update()
         #fist.update()
         
