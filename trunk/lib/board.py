@@ -127,7 +127,7 @@ class Board:
             self.time_passed = 1
 
         if hits > 0:
-            self.score += hits * 10
+            self.score += hits * self.level
             self.score_text.update(time_passed, "Score: " + str( self.score ) )
             self.humans -= hits
             print self.humans

@@ -114,7 +114,8 @@ class Game:
     def stuff_arrival(self, time_passed_seconds):
         for i in range(3):
             self.robot_last_arrival[i] += time_passed_seconds
-            if self.robot_arrival[i] < self.robot_last_arrival[i] and self.robot_rail[i]:
+            if self.robot_arrival[i] < self.robot_last_arrival[i] and self.robot_rail[i] or \
+               not self.robot_render:
                     print "Ingreso robot"
                     robot = self.robot_rail[i].sprites()[0]
                     self.robot_render.add(robot)
@@ -122,7 +123,8 @@ class Game:
                     self.robot_last_arrival[i] = 0
 
             self.human_last_arrival[i] += time_passed_seconds
-            if self.human_arrival[i] < self.human_last_arrival[i] and self.human_rail[i]:
+            if self.human_arrival[i] < self.human_last_arrival[i] and self.human_rail[i] or \
+                not self.human_render:
                     human = self.human_rail[i].sprites()[0]
                     self.human_render.add(human)
                     self.human_rail[i].remove(human)
