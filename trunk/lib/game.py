@@ -114,18 +114,40 @@ class Game:
     #TODO: revisar, no es adecuado el metodo
     def stuff_arrival(self, time_passed_seconds):
         for i in range(3):
+            
+            #Si no hay robots para ingresar al juego lo genero
+            if not self.robot_rail[i].sprites():
+                if randint(0,1):
+                    direction = LEFT
+                    pos = (self.screen_width-70, bottom_rail[i])
+                else:
+                    direction = RIGHT
+                    pos = (-70, bottom_rail[i])
+                self.robot_rail[i].add(Robot(pos, self.board_width, \
+                                       self.human_speed, direction, 10, img_size[i]))
+
             self.robot_last_arrival[i] += time_passed_seconds
-            if self.robot_rail[i].sprites() and (not self.robot_render or \
-               self.robot_arrival[i] < self.robot_last_arrival[i]):
+            if not self.robot_render or self.robot_arrival[i] < self.robot_last_arrival[i]:
                     print "Ingreso robot"
                     robot = self.robot_rail[i].sprites()[0]
                     self.robot_render.add(robot)
                     self.robot_rail[i].remove(robot)
                     self.robot_last_arrival[i] = 0
 
+            #Si no hay humanos para ingreasar genero uno nuevo
+            if not self.human_rail[i].sprites():
+                if randint(0,1):
+                    direction = LEFT
+                    pos = (self.screen_width-70, bottom_rail[i])
+                else:
+                    direction = RIGHT
+                    pos = (-70, bottom_rail[i])
+
+                self.human_rail[i].add(Human(pos, self.board_width, \
+                                       self.human_speed, direction, 10, img_size[i]))
+
             self.human_last_arrival[i] += time_passed_seconds
-            if self.human_rail[i].sprites() and (not self.human_render or \
-              self.human_arrival[i] < self.human_last_arrival[i]):
+            if not self.human_render or self.human_arrival[i] < self.human_last_arrival[i]:
                     human = self.human_rail[i].sprites()[0]
                     self.human_render.add(human)
                     self.human_rail[i].remove(human)
