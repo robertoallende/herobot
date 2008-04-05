@@ -5,7 +5,7 @@ from random import randint
 from pygame.locals import *
 from board import Board
 from shoter import Shoter
-from being import Robot, Human, Alien, LEFT, RIGHT
+from being import Robot, Human, Alien, LEFT, RIGHT, load_secuences
 from shoter import Shoter
 from intro_screen import presentation, Phrase
 from data import filepath
@@ -56,7 +56,7 @@ class Game:
         self.human_shoted = 0
         self.score = 0
 
-
+        load_secuences()#Muy importante esto
 
     def run_intro(self):
         # TODO: ver donde meter los fonts

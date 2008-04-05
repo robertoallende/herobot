@@ -1,8 +1,9 @@
+#clase-n-ss-tamno.png
 import sys
 import getopt
 import data
 import pygame
-from random import uniform
+from random import uniform, choice
 from pygame.locals import *
 from shoter import Shoter
 
@@ -17,6 +18,8 @@ FRAMERATE = 30 # how often to check if playback has finished
 soundfile='./../data/disparocorto.wav'
 soundfile2='./../data/herido.wav'
 
+secuences = {}
+
 #para probarlo hacer click sobre el objeto que da vueltas por ahi!!! y da vueltas como zaino!!!
 #TODO: *decidir que hacen cuadno se les dispara ( por ahora los humanos giran como el juego punch chimp)
 #      *comentar el codigo 
@@ -24,6 +27,30 @@ soundfile2='./../data/herido.wav'
 #      *como destruimos un sprite para que una vez muerto no joda mas??
 #      *donde y que le devolvemos al gil que dispara
 
+def load_secuences():
+    import re
+    import os
+    from data import data_dir
+    
+    global secuences
+    
+    secuences = {}
+    #arreglar si piden size
+    prog = re.compile(r'(?P<clase>mujer|hombre|robot)-(?P<nro>\d)-(?P<nro_sec>\d{2})\.png')
+    
+    for f in os.listdir(data_dir):
+        res = prog.match(f)
+        if res:
+            res = res.groupdict()
+            clase, nro = res['clase'], res['nro']
+            if not secuences.has_key(clase):
+                secuences[clase] = {}
+            
+            if secuences[clase].has_key(nro):
+                secuences[clase][nro] += 1
+            else:
+                secuences[clase][nro] = 1
+    print secuences
 
 class Being(pygame.sprite.Sprite):
     def __init__(self, pos, screen_width, images, speed=1, direction=LEFT, speed_change=1):
@@ -53,7 +80,7 @@ class Being(pygame.sprite.Sprite):
             
             #Si se llega a uno de los bordes se pega la vuelta
             if (self.screen_width < self.rect.left and self.direction == RIGHT) or \
-               (self.rect.left + self.rect.width < 0 and self.direction == LEFT):
+               (self.rect.left + self.rect.width  + 50 < 0 and self.direction == LEFT):
                self.set_direction(-self.direction)
 	    self.rect.left = self.rect.left + self.direction*time_passed_seconds*self.speed
         else:
@@ -71,22 +98,23 @@ class Being(pygame.sprite.Sprite):
 #TODO:fix it, cuando tengamos las imagenes hay que actualizarlo
 class Robot(Being):
     def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
-        #images = ['robot-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        images = ['robot-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        sec = choice(secuences['robot'].keys())
+        images = ['robot-%s-%02d.png' %(sec, x) for x in xrange(secuences['robot'][sec])]
         Being.__init__(self, pos, screen_width, images, speed, direction,speed_change)
 
 
 class Human(Being):
     def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
-        #images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        sex  = choice(['hombre', 'mujer'])
+        sec = choice(secuences[sex].keys())
+        images = ['%s-%s-%02d.png' %(sex, sec, x) for x in xrange(secuences[sex][sec])]
 
         Being.__init__(self, pos, screen_width, images, speed ,direction, speed_change)
 
 class Alien(Being):
     def __init__(self, pos, screen_width, speed=1, direction=LEFT, speed_change=1, size='small'):
-        #images = ['human-'+size+'-%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
-        images = ['human-'+'%02d' %(x) + '.png' for x in xrange(ROBOT_IMAGES)]
+        sec = choice(secuences['alien'].keys())
+        images = ['alien-%s-%02d.png' %(sec, x) for x in xrange(secuences['alien'][sec])]
 
         Being.__init__(self, pos, screen_width, images, speed, direction, speed_change)
 
