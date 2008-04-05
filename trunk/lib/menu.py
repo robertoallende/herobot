@@ -52,14 +52,8 @@ def main():
 
         if event.type == KEYDOWN:
 
-            if event.key == key['fullscreen'] :
-                Fullscreen = not Fullscreen
-                if Fullscreen:
-                    screen = pygame.display.set_mode(SCREEN_SIZE, FULLSCREEN, 32)
-                else:
-                    screen = pygame.display.set_mode(SCREEN_SIZE, 0, 32)
-
-            elif event.key == key['up']:
+            
+            if event.key == key['up']:
                 if menuItemSelected > 0 :
                     menuItemSelected -= 1
 
