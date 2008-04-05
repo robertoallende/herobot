@@ -1,4 +1,5 @@
 Credits
+-------
 
 Drawings and Art by
 Hikaru 
@@ -37,7 +38,11 @@ Emanuel
 Frapell
 Flecox
 
-Special Thanks to
-menttes
-HIKARU (you drawing rocks!)
+Third party stuff
+Fonts by http://www.larabiefonts.com
+Sound Samples by http://www.soundsnap.com
+Photos by http://www.morguefile.com/
 
+Special Thanks to
+HIKARU (your drawings rocks!)
+menttes official sponsor of Palangana and Torus
