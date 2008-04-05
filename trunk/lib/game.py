@@ -303,7 +303,7 @@ class Game:
         #end of the level or end of the game
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
-            print 'perdiste ' + reason
+            #print 'perdiste ' + reason
 
             if self.game_sound:
     	        self.game_sound.stop()
@@ -316,7 +316,7 @@ class Game:
             	self.score_sound.stop()
 
         if reason == 'not killed enough humans':
-            print 'perdiste ' + reason
+            #print 'perdiste ' + reason
 
             if self.game_sound:
     	        self.game_sound.stop()
