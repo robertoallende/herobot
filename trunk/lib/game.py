@@ -22,6 +22,7 @@ soundfile2=filepath('herido.wav')
 soundfile3=filepath('robot_negative.wav')
 soundfile_game=filepath('intro.wav')
 soundfile_intro=filepath('intro_screen.wav')
+soundfile_score=filepath('score.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -60,7 +61,8 @@ class Game:
         self.robot_shoted_sound = 0
         
         self.intro_sound = 0
-        
+        self.game_sound = 0
+        self.score_sound = 0
         load_secuences()#Muy importante esto
 
     def run_intro(self):
@@ -86,12 +88,15 @@ class Game:
             self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
             self.robot_shoted_sound = pygame.mixer.Sound(soundfile3)
             self.intro_sound = pygame.mixer.Sound(soundfile_intro)
-            
+            self.game_sound = pygame.mixer.Sound(soundfile_game)
+            self.score_sound = pygame.mixer.Sound(soundfile_score)
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
             self.robot_shoted_sound = None
             self.intro_sound = None
+            self.game_sound = None
+            self.score_sound = None
             print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
 
@@ -222,6 +227,9 @@ class Game:
                    self.human_shoted += 1
 
     def run_level(self, level):
+    	if self.game_sound:
+    	    self.game_sound.play(-1)
+
         clock = pygame.time.Clock()
         self.shoter = pygame.sprite.RenderUpdates(Shoter())
 
@@ -294,11 +302,32 @@ class Game:
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
             print 'perdiste ' + reason
+<<<<<<< .mine
+            if self.game_sound:
+    	        self.game_sound.stop()
+            if self.score_sound:
+            	self.score_sound.play()
+            showHighScores( self.screen, self.board.score, reason )
+=======
             showScores( self.screen, self.board.score, reason )
+>>>>>>> .r147
+            if self.score_sound:
+            	self.score_sound.stop()
 
         if reason == 'not killed enough humans':
             print 'perdiste ' + reason
+<<<<<<< .mine
+            if self.game_sound:
+    	        self.game_sound.stop()
+            if self.score_sound:
+            	self.score_sound.play()
+
+            showHighScores( self.screen, self.board.score, reason )
+=======
             showScores( self.screen, self.board.score, reason )
+>>>>>>> .r147
+            if self.score_sound:
+            	self.score_sound.stop()
 
         if reason == 'end level':
             self.max_robot_to_kill = self.board.lives
@@ -312,15 +341,15 @@ def main():
     screen = pygame.display.set_mode( [ 800, 600] )
 
     pygame.mouse.set_visible(False)
-    try:
-        game_sound = pygame.mixer.Sound(soundfile_game)
+    #try:
+     #   game_sound = pygame.mixer.Sound(soundfile_game)
     
-    except pygame.error, exc:
-        game_sound = None
-        print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
+    #except pygame.error, exc:
+     #   game_sound = None
+      #  print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
-    if game_sound:
-    	game_sound.play(-1)
+    #if game_sound:
+    	#game_sound.play(-1)
     	 
     g = Game( 800, 600, screen)
     g.setup_sound()
@@ -328,8 +357,8 @@ def main():
 
     g.run_level(1)
     
-    if game_sound:
-    	game_sound.stop()
+    #if game_sound:
+    #	game_sound.stop()
 
 def load_fonts():
     global launch_timer_font,active_marbles_font,popup_font,info_font, panel_font
