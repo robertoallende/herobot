@@ -118,13 +118,16 @@ def draw_text(phrases, font, screen, speed=0.05):
     phrases = [Phrase(p, font, (255, 200, 0), (0, SCREEN_SIZE[1]), speed) for p in phrases]
     phrases = SetRaise(phrases, SCREEN_SIZE[1])
     clock = pygame.time.Clock()
-
+    
+    background = pygame.Surface(SCREEN_SIZE)
+    background.fill([0, 0, 0])
     while pygame.event.poll().type != KEYDOWN:
-        screen.fill((0,0,0))
+        #screen.fill((0,0,0))
         time_passed = clock.tick(30)
         phrases.update(time_passed)
         rectlist = phrases.draw(screen)
         pygame.display.update(rectlist)
+        phrases.clear(screen, background)
     
 
 #####################################################################################
