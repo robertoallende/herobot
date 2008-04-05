@@ -9,7 +9,7 @@ from being import Robot, Human, Alien, LEFT, RIGHT
 from shoter import Shoter
 from intro_screen import presentation
 from data import filepath
-from score import showHighScores
+from score import showHighScores, Score
 
 FREQ = 44100   # same as audio CD
 BITSIZE = -16  # unsigned 16 bit

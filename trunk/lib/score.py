@@ -104,10 +104,11 @@ class Score :
         #deberia mejorarlo pero bueno....
         if bottom < 0 and long - top >= -(bottom - position) :
             pos_top += -(bottom)
-        elif bottom < 0 :
+        elif bottom < 0 and long - top > 0 :
             pos_top += long - top
-        elif top > long and  bottom - (top - long) >= 0:
-            pos_bottom -=  top -long
+
+        if top > long and  bottom - (top - long) >= 0:
+            pos_bottom -= top - long
         elif top > long :
             pos_bottom  = 0
 
@@ -290,7 +291,7 @@ def main():
 
 
     SCREEN_SIZE = (800,600)
-    SCORE       = 102
+    SCORE       = 106
     REASON_GAME_END = "You Louse becose nobody can't kill to wally"
 
     pygame.init()
