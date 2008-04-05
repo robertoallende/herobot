@@ -68,10 +68,6 @@ class Game:
         """
         try:
             pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
-        except pygame.error, exc:
-            print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
-
-        try:
             self.shot_sound = pygame.mixer.Sound(soundfile)
             self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
             self.robot_shoted_sound = pygame.mixer.Sound(soundfile3)
