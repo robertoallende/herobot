@@ -154,7 +154,7 @@ class Board:
 
         #Bonus
         if self.target == 0:
-            self.score += self.time_passed
+            self.score += int(self.time_passed)
 
     def clear(self):
         self.sprites.clear(self.screen, self.background)

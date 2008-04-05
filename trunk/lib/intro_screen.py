@@ -136,7 +136,7 @@ def main():
     from pygame.locals import *
     from data import filepath
 
-    font_filename = "GROOT___.TTF" #"Carnevalee Freakshow.ttf" #"pointy.ttf"  #"GROOT___.TTF"
+    font_filename = "HEMIHEAD.TTF" #"Carnevalee Freakshow.ttf" #"pointy.ttf"  #"GROOT___.TTF"
     pygame.init()
     #font = pygame.font.SysFont("arial", 100)
     font = pygame.font.Font( filepath( font_filename ), 100)

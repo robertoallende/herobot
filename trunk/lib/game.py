@@ -67,7 +67,7 @@ class Game:
         # TODO: ver donde meter los fonts
         if self.intro_sound:
         	self.intro_sound.play(-1)
-        font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
+        font = pygame.font.Font( filepath("HEMIHEAD.TTF"), 100)
         presentation(phrase, font, self.screen)
         if self.intro_sound:
         	self.intro_sound.stop() 
@@ -243,8 +243,8 @@ class Game:
         show_menu = False
 
         #ver que hacer con los fonts grrrrrrrr..........
-        font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
-        self.text_render.add(Phrase('Level %d' %(self.level), font, (55, 55, 55), (200, 200), 0.04))
+        font = pygame.font.Font( filepath("HEMIHEAD.TTF"), 100)
+        self.text_render.add(Phrase('Level %d' %(self.level), font, (255, 200, 0), (200, 200), 0.04))
         while True:
             for e in pygame.event.get():
                 if e.type == QUIT:
@@ -301,7 +301,7 @@ class Game:
 
         if reason == 'end level':
             self.max_robot_to_kill = self.board.lives
-            self.run_level(level + 1)
+            self.run_level((level + 1)%100)
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
