@@ -35,7 +35,7 @@ class Board:
 #Esta clase implementa frases que van subiendo en la pantalla achicandose
 #a medida que avanza
 class Phrase(pygame.sprite.Sprite):
-    def __init__(self, text, font, color, initial_pos, speed):
+    def __init__(self, text, font, color, initial_pos, speed, text_reduce=True):
         pygame.sprite.Sprite.__init__(self)
         self.text = text
         self.speed = speed
@@ -44,6 +44,7 @@ class Phrase(pygame.sprite.Sprite):
         self.rect = list(initial_pos)
         self.width = self.render_text.get_width()
         self.height = self.render_text.get_height()
+        self.text_reduce = text_reduce
         self.alive = True
         
     def __str__(self):
@@ -54,8 +55,9 @@ class Phrase(pygame.sprite.Sprite):
 
         #esta en la pantalla asi que hay que dibujarlo
         if 0 < self.rect[1]+self.height and self.rect[1] < SCREEN_SIZE[1]:
-            self.width *= 0.994
-            self.height *= 0.994
+            if self.text_reduce:
+                self.width *= 0.994
+                self.height *= 0.994
             self.rect[0] = (SCREEN_SIZE[0] - self.width)/2
             self.image = pygame.transform.scale(self.render_text, (int(self.width), int(self.height)))
         elif self.rect[1]+self.height <= 0:

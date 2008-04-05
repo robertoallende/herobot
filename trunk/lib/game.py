@@ -7,7 +7,7 @@ from board import Board
 from shoter import Shoter
 from being import Robot, Human, Alien, LEFT, RIGHT
 from shoter import Shoter
-from intro_screen import presentation
+from intro_screen import presentation, Phrase
 from data import filepath
 from score import showHighScores, Score
 
@@ -137,6 +137,7 @@ class Game:
         # Los personajes que estan en la pantalla
         self.robot_render = pygame.sprite.RenderUpdates()
         self.human_render = pygame.sprite.RenderUpdates()
+        self.text_render = pygame.sprite.RenderUpdates()
 
         if hasattr(self, 'board'):
             score = self.board.score
@@ -223,6 +224,10 @@ class Game:
         self.level = level
 
         self.generate_stuff()
+        
+        #ver que hacer con los fonts grrrrrrrr..........
+        font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
+        self.text_render.add(Phrase('Level %d' %(self.level), font, (55, 55, 55), (200, 200), 0.04))
         while( pygame.event.poll().type != KEYDOWN  ):
             time_passed = clock.tick(30)
             time_passed_seconds = time_passed / 1000.0
@@ -236,6 +241,7 @@ class Game:
 
             self.human_render.update(time_passed_seconds)
             self.robot_render.update(time_passed_seconds)
+            self.text_render.update(time_passed)
             self.shoter.update()
             self.stuff_arrival(time_passed_seconds)
 
@@ -244,6 +250,7 @@ class Game:
             rectlist = self.board.draw()
             rectlist += self.human_render.draw(self.screen)
             rectlist += self.robot_render.draw(self.screen)
+            rectlist += self.text_render.draw(self.screen)
             rectlist += self.shoter.draw(self.screen)
             
             pygame.display.update(rectlist)
@@ -251,6 +258,7 @@ class Game:
             self.board.clear()
             self.human_render.clear(self.screen, self.board.background)
             self.robot_render.clear(self.screen, self.board.background)
+            self.text_render.clear(self.screen, self.board.background)
             self.shoter.clear(self.screen, self.board.background)
 
             if self.board.end():
