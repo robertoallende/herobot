@@ -5,7 +5,7 @@ from sys import exit
 from random import choice
 
 
-backgrounds   = ['badgimp.png', 'venger.png', 'number-5.png']
+backgrounds   = ['badgimp.png', 'venger.png' ]
 icon_filename = 'crosshair.png'
 font_filename = 'HEMIHEAD.TTF'
 
