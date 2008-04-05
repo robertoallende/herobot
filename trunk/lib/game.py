@@ -232,7 +232,7 @@ class Game:
         self.text_render.add(Phrase('Level %d' %(self.level), font, (55, 55, 55), (200, 200), 0.04))
         while True:
             for e in pygame.event.get():
-                if e.type == QUIT or (e.type == KEYDOWN and e.key == k_ESC):
+                if e.type == QUIT or (e.type == KEYDOWN and pygame.key.get_pressed()[K_ESCAPE]):
                     exit()
             time_passed = clock.tick(30)
             time_passed_seconds = time_passed / 1000.0
