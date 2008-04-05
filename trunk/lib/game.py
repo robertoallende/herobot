@@ -23,6 +23,7 @@ soundfile3=filepath('robot_negative.wav')
 soundfile_game=filepath('intro.wav')
 soundfile_intro=filepath('intro_screen.wav')
 soundfile_score=filepath('score.wav')
+soundfile_alien=filepath('alien.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -65,6 +66,8 @@ class Game:
         self.intro_sound = 0
         self.game_sound = 0
         self.score_sound = 0
+        self.alien_sound = 0
+
         load_secuences()#Muy importante esto
 
     def run_intro(self):
@@ -92,6 +95,7 @@ class Game:
             self.intro_sound = pygame.mixer.Sound(soundfile_intro)
             self.game_sound = pygame.mixer.Sound(soundfile_game)
             self.score_sound = pygame.mixer.Sound(soundfile_score)
+            self.alien_sound = pygame.mixer.Sound(soundfile_alien)
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
@@ -99,6 +103,8 @@ class Game:
             self.intro_sound = None
             self.game_sound = None
             self.score_sound = None
+            self.alien_sound = None
+
             print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
 
@@ -255,8 +261,8 @@ class Game:
 
                 alien_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0].target, self.alien_render, True)
                 if alien_shoted:
-                   #if self.human_shoted_sound:
-                       #self.human_shoted_sound.play()
+                   if self.alien_sound:
+                       self.alien_sound.play()
                    self.alien_render.remove(alien_shoted)
                    self.alien_shoted += 1
 
