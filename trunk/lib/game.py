@@ -9,7 +9,7 @@ from being import Robot, Human, Alien, LEFT, RIGHT, load_secuences
 from shoter import Shoter
 from intro_screen import presentation, Phrase
 from data import filepath
-from score import showHighScores, Score
+from score import showScores, Score
 
 FREQ = 44100   # same as audio CD
 BITSIZE = -16  # unsigned 16 bit
@@ -294,11 +294,11 @@ class Game:
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
             print 'perdiste ' + reason
-            showHighScores( self.screen, self.board.score, reason )
+            showScores( self.screen, self.board.score, reason )
 
         if reason == 'not killed enough humans':
             print 'perdiste ' + reason
-            showHighScores( self.screen, self.board.score, reason )
+            showScores( self.screen, self.board.score, reason )
 
         if reason == 'end level':
             self.max_robot_to_kill = self.board.lives
