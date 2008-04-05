@@ -54,6 +54,7 @@ class Game:
 
         self.robot_shoted = 0
         self.human_shoted = 0
+        self.score = 0
 
 
 
@@ -137,7 +138,11 @@ class Game:
         self.robot_render = pygame.sprite.RenderUpdates()
         self.human_render = pygame.sprite.RenderUpdates()
 
-        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, \
+        if hasattr(self, 'board'):
+            score = self.board.score
+        else:
+            score = 0
+        self.board = Board(self, score, self.total_time, self.max_robot_to_kill+1, \
                            self.min_human_to_kill, self.cant_human, self.level)
 
     #TODO: revisar, no es adecuado el metodo
@@ -226,7 +231,8 @@ class Game:
             # fijarse si se disparo a alguien ver parametros
 
             self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted)
-            self.human_shoted = 0 ; self.robot_shoted = 0
+            self.human_shoted = 0
+            self.robot_shoted = 0
 
             self.human_render.update(time_passed_seconds)
             self.robot_render.update(time_passed_seconds)
