@@ -304,7 +304,7 @@ class Game:
             self.max_robot_to_kill = self.board.lives
             self.run_level((level + 1)%100)
 
-phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
+phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. May the force be with you, or not...'
 
 def main():
         
