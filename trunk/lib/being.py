@@ -50,7 +50,6 @@ def load_secuences():
                 secuences[clase][nro] += 1
             else:
                 secuences[clase][nro] = 1
-    print secuences
 
 class Being(pygame.sprite.Sprite):
     def __init__(self, pos, screen_width, images, speed=1, direction=LEFT, speed_change=1):
