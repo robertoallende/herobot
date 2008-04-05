@@ -19,7 +19,7 @@ FRAMERATE = 30 # how often to check if playback has finished
 soundfile=filepath('disparocorto.wav')
 #soundfile='./../data/intro.wav'
 soundfile2=filepath('herido.wav') 
-
+soundfile3=filepath('robot_negative.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -54,6 +54,7 @@ class Game:
         self.robot_shoted = 0
         self.human_shoted = 0
         self.score = 0
+        self.robot_shoted_sound = 0
 
         load_secuences()#Muy importante esto
 
@@ -73,9 +74,11 @@ class Game:
         try:
             self.shot_sound = pygame.mixer.Sound(soundfile)
             self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
+            self.robot_shoted_sound = pygame.mixer.Sound(soundfile3)
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
+            self.robot_shoted_sound = None
             print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
 
@@ -192,15 +195,15 @@ class Game:
         if pygame.mouse.get_pressed()[0]:
                 if self.shot_sound:
                     self.shot_sound.play()
-                robot_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.robot_render, True)
+                robot_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0].target, self.robot_render, True)
                 if robot_shoted:
-                   if self.human_shoted_sound:
-                       self.human_shoted_sound.play()
+                   if self.robot_shoted_sound:
+                       self.robot_shoted_sound.play()
                    self.robot_render.remove(robot_shoted)
                    print "pummm", len(robot_shoted)
                    self.robot_shoted += 1
 
-                human_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.human_render, True)
+                human_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0].target, self.human_render, True)
                 if human_shoted:
                    if self.human_shoted_sound:
                        self.human_shoted_sound.play()
