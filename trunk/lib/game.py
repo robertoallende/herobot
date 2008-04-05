@@ -302,30 +302,27 @@ class Game:
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
             print 'perdiste ' + reason
-<<<<<<< .mine
+
             if self.game_sound:
     	        self.game_sound.stop()
             if self.score_sound:
             	self.score_sound.play()
-            showHighScores( self.screen, self.board.score, reason )
-=======
+
             showScores( self.screen, self.board.score, reason )
->>>>>>> .r147
+
             if self.score_sound:
             	self.score_sound.stop()
 
         if reason == 'not killed enough humans':
             print 'perdiste ' + reason
-<<<<<<< .mine
+
             if self.game_sound:
     	        self.game_sound.stop()
             if self.score_sound:
             	self.score_sound.play()
 
-            showHighScores( self.screen, self.board.score, reason )
-=======
             showScores( self.screen, self.board.score, reason )
->>>>>>> .r147
+
             if self.score_sound:
             	self.score_sound.stop()
 
@@ -353,7 +350,6 @@ def main():
     	 
     g = Game( 800, 600, screen)
     g.setup_sound()
-    g.run_intro()
 
     g.run_level(1)
     

@@ -3,7 +3,7 @@ import pygame
 from pygame.locals import *
 from sys import exit
 from random import choice
-
+from intro_screen import presentation
 
 backgrounds   = ['badgimp.png', 'venger.png' ]
 icon_filename = 'crosshair.png'
@@ -33,7 +33,7 @@ def main():
     menuItemSelected = 0
     showMenu         = True
 
-
+    presentation(phrase, pygame.font.Font( filepath(font_filename), 100), screen)
     key  = { "fullscreen":K_f, "quit":K_q, "left":K_LEFT, "right":K_RIGHT, "up":K_UP, "down":K_DOWN, "fire":K_SPACE, "select":K_RETURN }
     menu = [ 
             { "title": "New Game!", "action":"pay_game"  }, \
@@ -76,7 +76,6 @@ def main():
              #   elif menuItemSelected == 1 : #show score
 
                 elif menuItemSelected == 1 : #show intro 2
-                    from intro_screen import presentation
                     presentation(phrase, pygame.font.Font( filepath(font_filename), 100), screen)
 
              #   elif menuItemSelected == 3 : #show credits
