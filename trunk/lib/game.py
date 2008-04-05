@@ -16,10 +16,12 @@ BITSIZE = -16  # unsigned 16 bit
 CHANNELS = 2   # 1 == mono, 2 == stereo
 BUFFER = 1024  # audio buffer size in no. of samples
 FRAMERATE = 30 # how often to check if playback has finished
+
 soundfile=filepath('disparocorto.wav')
-#soundfile='./../data/intro.wav'
 soundfile2=filepath('herido.wav') 
 soundfile3=filepath('robot_negative.wav')
+soundfile_game=filepath('intro.wav')
+soundfile_intro=filepath('intro.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -55,7 +57,9 @@ class Game:
         self.human_shoted = 0
         self.score = 0
         self.robot_shoted_sound = 0
-
+        
+        self.intro_sound = 0
+        
         load_secuences()#Muy importante esto
 
     def run_intro(self):
@@ -68,13 +72,19 @@ class Game:
         """
         try:
             pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+        except pygame.error, exc:
+            print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
+
+        try:
             self.shot_sound = pygame.mixer.Sound(soundfile)
             self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
             self.robot_shoted_sound = pygame.mixer.Sound(soundfile3)
+            self.intro_sound = pygame.mixer.Sound(soundfile_intro)
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
             self.robot_shoted_sound = None
+            self.intro_sound = None
             print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
 
@@ -287,12 +297,24 @@ def main():
     screen = pygame.display.set_mode( [ 800, 600] )
 
     pygame.mouse.set_visible(False)
+    try:
+        game_sound = pygame.mixer.Sound(soundfile_game)
+    
+    except pygame.error, exc:
+        game_sound = None
+        print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
+
+    if game_sound:
+    	game_sound.play(-1)
+    	 
     g = Game( 800, 600, screen)
     g.setup_sound()
     #g.run_intro()
 
     g.run_level(1)
-
+    
+    if game_sound:
+    	game_sound.stop()
 
 def load_fonts():
     global launch_timer_font,active_marbles_font,popup_font,info_font, panel_font
