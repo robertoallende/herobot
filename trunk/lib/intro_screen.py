@@ -121,6 +121,8 @@ def draw_text(phrases, font, screen, speed=0.05):
     
     background = pygame.Surface(SCREEN_SIZE)
     background.fill([0, 0, 0])
+    screen.blit(background, (0,0))
+    pygame.display.update()
     while pygame.event.poll().type != KEYDOWN:
         screen.fill((0,0,0))
         time_passed = clock.tick(30)

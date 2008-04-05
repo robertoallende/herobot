@@ -77,7 +77,7 @@ def main():
 
                 elif menuItemSelected == 1 : #show intro 2
                     from intro_screen import presentation
-                    presentation(phrase, font, screen)
+                    presentation(phrase, pygame.font.Font( filepath(font_filename), 100), screen)
 
              #   elif menuItemSelected == 3 : #show credits
              #       from score import showHighScores
