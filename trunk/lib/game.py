@@ -233,14 +233,21 @@ class Game:
         self.level = level
 
         self.generate_stuff()
-        
+
+        show_menu = False
+
         #ver que hacer con los fonts grrrrrrrr..........
         font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
         self.text_render.add(Phrase('Level %d' %(self.level), font, (55, 55, 55), (200, 200), 0.04))
         while True:
             for e in pygame.event.get():
-                if e.type == QUIT or (e.type == KEYDOWN and pygame.key.get_pressed()[K_ESCAPE]):
+                if e.type == QUIT:
                     exit()
+                if e.type == KEYDOWN and pygame.key.get_pressed()[K_ESCAPE]:
+                    show_menu = True
+
+            if show_menu:
+                break
             time_passed = clock.tick(30)
             time_passed_seconds = time_passed / 1000.0
             
