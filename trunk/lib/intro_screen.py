@@ -10,7 +10,7 @@ from string import split, join
 
 SCREEN_SIZE = (800, 600)
 #Parte string en frases de tamanio size(aunque no siempre)
-def get_phrases(string, size):
+def get_phrases(string, size=30):
     words = split(string)
     result = []
     while words:
@@ -32,104 +32,102 @@ class Board:
     def __init__(self, game, pos):
         pass
 
-#Esta clase implementa frases que van subiendo en la pantalla achicandose
-#a medida que avanza
-class Phrase(pygame.sprite.Sprite):
-    def __init__(self, text, font, color, initial_pos, speed, text_reduce=True):
+
+def presentation(text, font, screen, speed=0.05):
+    draw_text(get_phrases(text), font, screen, speed=0.05)
+
+phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
+
+###################################Refactoring#######################################
+# Objecto que se comienza en initial_pos y se va elevando, obj debe 
+# ser un sprite o un texto renderiado
+class ObjectRaise(pygame.sprite.Sprite):
+    def __init__(self, obj, initial_pos, speed, obj_reduce=True, obj_center=True):
         pygame.sprite.Sprite.__init__(self)
-        self.text = text
+        self.obj = obj
         self.speed = speed
-        self.render_text = font.render(text, True, color)
-        self.image = self.render_text
+        #reemplazado por obj #self.render_text = font.render(text, True, color)
+        self.image = self.obj
         self.rect = list(initial_pos)
-        self.width = self.render_text.get_width()
-        self.height = self.render_text.get_height()
-        self.text_reduce = text_reduce
+        
+        if hasattr(self.obj, 'width'):
+            pass
+        elif hasattr(self.obj, 'get_width'):
+            self.width = self.obj.get_width()
+            self.height = self.obj.get_height()
+        else:
+            raise Error #fijarse de dar un error apropiado
+        self.obj_reduce = obj_reduce
+        self.obj_center = obj_center
         self.alive = True
         
     def __str__(self):
-        return self.text
+        return self.obj
     
     def update(self, time_passed):
         self.rect[1] -= time_passed*self.speed
 
         #esta en la pantalla asi que hay que dibujarlo
         if 0 < self.rect[1]+self.height and self.rect[1] < SCREEN_SIZE[1]:
-            if self.text_reduce:
+            if self.obj_reduce:
                 self.width *= 0.994
                 self.height *= 0.994
-            self.rect[0] = (SCREEN_SIZE[0] - self.width)/2
-            self.image = pygame.transform.scale(self.render_text, (int(self.width), int(self.height)))
+            if self.obj_center:
+                self.rect[0] = (SCREEN_SIZE[0] - self.width)/2
+            self.image = pygame.transform.scale(self.obj, (int(self.width), int(self.height)))
         elif self.rect[1]+self.height <= 0:
             for grp in self.groups():
                 grp.remove(self)
 
-#Deberia mostrar algo parecido a los titulos de star wars, pero falta tunearlo un poco con las velocidades
-#def presentation(text, font, screen, speed=0.05):
-    #phrases = [Phrase(p, font, (255, 200, 0), SCREEN_SIZE, speed) for p in get_phrases(text, 30)]
-    #last_phrase = pygame.sprite.GroupSingle()
-    #screen_phrases = pygame.sprite.RenderUpdates()
+
+class Phrase(ObjectRaise):
+    def __init__(self, text, font, color, initial_pos, speed, text_reduce=True, text_center=True):
+        self.text = text
+        ObjectRaise.__init__(self, font.render(text, True, color), initial_pos, speed, text_reduce, text_center)
+
+
+# Eleva un conjunto de Obj_raise
+class SetRaise(pygame.sprite.Sprite): #Sprite or object???
+    #initial pos es el pto del eje de las y donde "salen", los sprites
+    def __init__(self, objs, initial_pos):
+        self.objs = objs
+        self.initial_pos = initial_pos
+        self.last_obj = pygame.sprite.GroupSingle()
+        self.screen_objs = pygame.sprite.RenderUpdates()
     
-    #clock = pygame.time.Clock()
-    #last_phrase.add(phrases[0])
-    #screen_phrases.add(phrases.pop(0))
-    #while screen_phrases:
-        #for event in pygame.event.get():
-            #if event.type == KEYDOWN:
-                #return
-        #if last_phrase:
-            #s  = last_phrase.sprite
-            #if phrases and s.rect[1]+s.height < SCREEN_SIZE[1] - 2:
-                #last_phrase.add(phrases[0])
-                #screen_phrases.add(phrases.pop(0))
-        #screen.fill((0,0,0))
-        #time_passed = clock.tick(30)
-        #screen_phrases.update(time_passed)
-        #rectlist = screen_phrases.draw(screen)
-        #pygame.display.update(rectlist)
+        if self.objs:
+            self.last_obj.add(self.objs[0])
+            self.screen_objs.add(self.objs.pop(0))
     
-    #while pygame.event.wait().type != KEYDOWN:pass
+    def update(self, time_passed):
+        if self.last_obj:
+            obj  = self.last_obj.sprite
+            if self.objs and obj.rect[1]+obj.height < self.initial_pos - 2: #cambiar esta parte
+                self.last_obj.add(self.objs[0])
+                self.screen_objs.add(self.objs.pop(0))
+        self.screen_objs.update(time_passed)
+
+    def draw(self, screen):
+        return self.screen_objs.draw(screen)
+
+    def clear(self, screen, background):
+        self.screen_objs.clear(screen, background)
+
 
 def draw_text(phrases, font, screen, speed=0.05):
-    phrases = [Phrase(p, font, (255, 200, 0), SCREEN_SIZE, speed) for p in phrases]
-    last_phrase = pygame.sprite.GroupSingle()
-    screen_phrases = pygame.sprite.RenderUpdates()
-    
+    phrases = [Phrase(p, font, (255, 200, 0), (0, SCREEN_SIZE[1]), speed) for p in phrases]
+    phrases = SetRaise(phrases, SCREEN_SIZE[1])
     clock = pygame.time.Clock()
-    last_phrase.add(phrases[0])
-    screen_phrases.add(phrases.pop(0))
-    while screen_phrases:
-        for event in pygame.event.get():
-            if event.type == KEYDOWN:
-                return
-        if last_phrase:
-            s  = last_phrase.sprite
-            if phrases and s.rect[1]+s.height < SCREEN_SIZE[1] - 2:
-                last_phrase.add(phrases[0])
-                screen_phrases.add(phrases.pop(0))
+
+    while pygame.event.poll().type != KEYDOWN:
         screen.fill((0,0,0))
         time_passed = clock.tick(30)
-        screen_phrases.update(time_passed)
-        rectlist = screen_phrases.draw(screen)
+        phrases.update(time_passed)
+        rectlist = phrases.draw(screen)
         pygame.display.update(rectlist)
     
-    while pygame.event.wait().type != KEYDOWN:pass
 
-
-def presentation(text, font, screen, speed=0.05):
-    draw_text(get_phrases(text), font, screen, speed=0.05)
-
-def text_end_level(level, reason, score, font, screen):
-    phrases = []
-    if reason == 'end level':
-        phrases = ['Level %d finished' %(level), 'Score ................... %d' %(score)]
-    else:
-        phrases = ['Game Over', reason]
-    draw_text(phrases, font, screen)
-
-phrase = 'Game Over.\n razon ninguna.'
-#'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
-
+#####################################################################################
 # metodo baston
 def main():
     from pygame.locals import *
@@ -140,8 +138,7 @@ def main():
     #font = pygame.font.SysFont("arial", 100)
     font = pygame.font.Font( filepath( font_filename ), 100)
     screen = pygame.display.set_mode(SCREEN_SIZE)
-    text_end_level(3, 'end level', 200, font, screen)
+    presentation(phrase, font, screen)
         
 if __name__ == "__main__":
     main()
-
