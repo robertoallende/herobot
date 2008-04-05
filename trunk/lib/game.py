@@ -21,7 +21,7 @@ soundfile=filepath('disparocorto.wav')
 soundfile2=filepath('herido.wav') 
 soundfile3=filepath('robot_negative.wav')
 soundfile_game=filepath('intro.wav')
-soundfile_intro=filepath('intro.wav')
+soundfile_intro=filepath('intro_screen.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -65,8 +65,13 @@ class Game:
 
     def run_intro(self):
         # TODO: ver donde meter los fonts
+        if self.intro_sound:
+        	self.intro_sound.play(-1)
         font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
         presentation(phrase, font, self.screen)
+        if self.intro_sound:
+        	self.intro_sound.stop() 
+        
 
     def setup_sound(self):
         """ Initialize sound files
@@ -81,6 +86,7 @@ class Game:
             self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
             self.robot_shoted_sound = pygame.mixer.Sound(soundfile3)
             self.intro_sound = pygame.mixer.Sound(soundfile_intro)
+            
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
@@ -317,7 +323,7 @@ def main():
     	 
     g = Game( 800, 600, screen)
     g.setup_sound()
-    #g.run_intro()
+    g.run_intro()
 
     g.run_level(1)
     
