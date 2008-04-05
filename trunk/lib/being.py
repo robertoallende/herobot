@@ -36,7 +36,7 @@ def load_secuences():
     
     secuences = {}
     #arreglar si piden size
-    prog = re.compile(r'(?P<clase>mujer|hombre|robot)-(?P<nro>\d)-(?P<nro_sec>\d{2})\.png')
+    prog = re.compile(r'(?P<clase>mujer|hombre|robot|alien)-(?P<nro>\d)-(?P<nro_sec>\d{2})\.png')
     
     for f in os.listdir(data_dir):
         res = prog.match(f)
