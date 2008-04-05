@@ -1,7 +1,7 @@
 He Robot
 ========
 
-Entry in PyWeek #5  <http://www.pyweek.org/5/>
+Entry in PyWeek #6  <http://www.pyweek.org/6/>
 Team: Palangana and Tourus
 Members: flecox, luis, hikaru, noe, nueces, r0ver, emanuel, frapell, quimera
 
