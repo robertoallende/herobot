@@ -155,6 +155,8 @@ class Board:
             return True
         elif self.humans == 0:
             return True
+        elif self.target == 0:
+            return True
         else:
             return False
 
@@ -165,8 +167,8 @@ class Board:
             return 'not killed enough humans' 
         elif self.time == 0 and self.target == 0:
             return 'end level'
-        elif self.humans == 0:
-            return 'end level' 
+        elif self.humans == 0 or self.target == 0:
+            return 'end level'
 
 
 # metodo baston 
