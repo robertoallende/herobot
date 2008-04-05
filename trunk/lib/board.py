@@ -109,9 +109,14 @@ class Board:
 
     def draw_lives(self):
         #lives 
+        if self.lives < 10:
+            caracter = '0'
+        else:
+            caracter = ''
+            
         initial_pos = ( self.game.board_width  - self.graph_sides, \
                         self.game.screen_height - self.graph_bottom )
-        self.lives_text = Text("Error Margin: " + str(self.lives) , initial_pos, 2 )
+        self.lives_text = Text("Error Margin: " + caracter + str(self.lives) , initial_pos, 2 )
         return self.lives_text
 
     def draw_level(self):
@@ -139,7 +144,11 @@ class Board:
 
         if lives > 0:
             self.lives -= lives
-            self.lives_text.update(time_passed, "Error Margin: " + str( self.lives ) )
+            if self.lives < 10:
+                caracter = '0'
+            else:
+                caracter = ''
+            self.lives_text.update(time_passed, "Error Margin: " + caracter + str( self.lives ) )
 
         self.time_passed -= time_passed
 
