@@ -40,7 +40,6 @@ class Game:
         self.screen = screen
 
         self.max_robot_to_kill =  10
-        self.score = 0
 
         self.robot_shoted = 0
         self.human_shoted = 0
@@ -109,7 +108,7 @@ class Game:
         self.robot_render = pygame.sprite.RenderUpdates()
         self.human_render = pygame.sprite.RenderUpdates()
 
-        self.board = Board(self, self.score, self.total_time, self.max_robot_to_kill, \
+        self.board = Board(self, 0, self.total_time, self.max_robot_to_kill, \
                            self.min_human_to_kill, self.cant_human, self.level)
 
     #TODO: revisar, no es adecuado el metodo
@@ -228,8 +227,7 @@ class Game:
 
         if reason == 'end level':
             self.max_robot_to_kill = self.board.lives
-            self.score = self.board.score
-            self.run_level(level + 1, )
+            self.run_level(level + 1)
 
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
@@ -250,6 +248,9 @@ def load_fonts():
     pygame.font.init()
     panel_font = pygame.font.Font(None, font_size)
 
+
+def text_end_level(level, reason):
+    text
 
 if __name__ == "__main__":
     main()
