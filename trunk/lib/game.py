@@ -16,10 +16,9 @@ BITSIZE = -16  # unsigned 16 bit
 CHANNELS = 2   # 1 == mono, 2 == stereo
 BUFFER = 1024  # audio buffer size in no. of samples
 FRAMERATE = 30 # how often to check if playback has finished
-soundfile='./../data/disparocorto.wav'
+soundfile=filepath('disparocorto.wav')
 #soundfile='./../data/intro.wav'
-soundfile2='./../data/herido.wav'
-
+soundfile2=filepath('herido.wav') 
 
 
 bottom_rail = [300, 420, 540]
