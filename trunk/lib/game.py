@@ -217,6 +217,7 @@ class Game:
             if self.board.end():
                 break
 
+        #end of the level or end of the game
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
             print 'perdiste ' + reason
