@@ -71,6 +71,7 @@ class Board:
         self.humans = humans
         self.level = level
 
+
         #background
         self.background = pygame.Surface(self.game.screen.get_size())
         self.background = self.background.convert()
@@ -141,6 +142,10 @@ class Board:
             self.lives_text.update(time_passed, "Error Margin: " + str( self.lives ) )
 
         self.time_passed -= time_passed
+
+        #Bonus
+        if self.target == 0:
+            self.score += self.time_passed
 
     def clear(self):
         self.sprites.clear(self.screen, self.background)
