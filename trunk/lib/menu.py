@@ -5,9 +5,11 @@ from sys import exit
 from random import choice
 
 
-backgrounds   = ['badgimp.png', 'venger.png']
+backgrounds   = ['badgimp.png', 'venger.png', 'number-5.png']
 icon_filename = 'crosshair.png'
 font_filename = 'HEMIHEAD.TTF'
+
+phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. May the force be with you, or not...'
 
 
 def main():
@@ -17,8 +19,10 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode( SCREEN_SIZE )
+    pygame.display.set_caption('...::HeRobot::...')
     background, a = load_image( choice( backgrounds ) ) 
     icon, a = load_image( icon_filename )
+    pygame.display.set_icon(icon)
     
     font             = pygame.font.Font( filepath(font_filename), 32)
     fontColor        = ( 255, 200, 0 )
@@ -73,7 +77,7 @@ def main():
 
                 elif menuItemSelected == 1 : #show intro 2
                     from intro_screen import presentation
-                    presentation()
+                    presentation(phrase, font, screen)
 
              #   elif menuItemSelected == 3 : #show credits
              #       from score import showHighScores
