@@ -21,13 +21,9 @@ def main():
     icon, a = load_image( icon_filename )
     
     font             = pygame.font.Font( filepath(font_filename), 32)
-    #font             = pygame.font.SysFont( "Verdana", 34 )
-    #fontColor        = ( 0, 240, 255 )
-    fontColor        = ( 200, 200, 200 )
+    fontColor        = ( 255, 200, 0 )
     backgroundColor  = None #( 0, 0, 0)
-    #menuPosition    = ( 140, 160 ) # 640x480
     menuPosition     = ( 460, 80 ) # 800x600
-    #menuPosition     = ( 200, 280 ) # 1024x768
 
     Fullscreen       = False
     menuItemSelected = 0
@@ -36,11 +32,11 @@ def main():
 
     key  = { "fullscreen":K_f, "quit":K_q, "left":K_LEFT, "right":K_RIGHT, "up":K_UP, "down":K_DOWN, "fire":K_SPACE, "select":K_RETURN }
     menu = [ 
-            { "title": "New Game!", "action":"pay_game", "area":0 }, \
-           # { "title": "Show Score", "action":"show_score", "area":0 }, \
-           # { "title": "Show Intro", "action":"show_score", "area":0 }, \
-           # { "title": "Credits", "action":"credits", "area":0 }, \
-            { "title": "Quit", "action":"quit and bye bye!", "area":0 } \
+            { "title": "New Game!", "action":"pay_game"  }, \
+          #  { "title": "Show Score", "action":"show_intro" }, \
+            { "title": "Show Intro", "action":"show_score" }, \
+          #  { "title": "Credits", "action":"credits"  }, \
+            { "title": "Quit", "action":"quit and bye bye!" } \
            ]
 
 
@@ -69,10 +65,21 @@ def main():
                 # print "Action: %i" % menuItemSelected
                 # print menu[menuItemSelected]['action']
 
-                if   menuItemSelected == 0 :
+                if   menuItemSelected == 0 : #new game!
                     from game import main
                     main()
-                elif menuItemSelected == 1 :
+
+             #   elif menuItemSelected == 1 : #show score
+
+                elif menuItemSelected == 1 : #show intro 2
+                    from intro_screen import presentation
+                    presentation()
+
+             #   elif menuItemSelected == 3 : #show credits
+             #       from score import showHighScores
+             #       showHighScores()
+
+                elif menuItemSelected == 2 : #quit $
                     exit()
 
             #elif event.mouse
