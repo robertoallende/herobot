@@ -256,7 +256,9 @@ class Game:
                 if e.type == QUIT:
                     exit()
                 if e.type == KEYDOWN and pygame.key.get_pressed()[K_ESCAPE]:
-                    show_menu = True
+                	if self.game_sound:
+                		self.game_sound.stop()
+                	show_menu = True
                 elif e.type == KEYDOWN and pygame.key.get_pressed()[K_p]:
                     pause = not pause
 
@@ -327,6 +329,8 @@ class Game:
             	self.score_sound.stop()
 
         if reason == 'end level':
+            if self.game_sound:
+                self.game_sound.stop()
             self.max_robot_to_kill = self.board.lives
             self.run_level((level + 1)%100)
 
