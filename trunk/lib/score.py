@@ -177,7 +177,7 @@ def showScores( screen, score, reason_game_end ):
 
     INITIAL_POS  = (130,110)
     TITLE_POS    = (80,110)
-    RECORD_POS_X = 520
+    RECORD_POS_X = 540
     color       = (20,  60, 240)
     colorUp      = (255,  0,   0)
     QUANTITY     = 10
