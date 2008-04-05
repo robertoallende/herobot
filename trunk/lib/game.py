@@ -178,7 +178,6 @@ class Game:
 
             self.robot_last_arrival[i] += time_passed_seconds
             if not self.robot_render or self.robot_arrival[i] < self.robot_last_arrival[i]:
-                    print "Ingreso robot"
                     robot = self.robot_rail[i].sprites()[0]
                     self.robot_render.add(robot)
                     self.robot_rail[i].remove(robot)
@@ -213,7 +212,6 @@ class Game:
                    if self.robot_shoted_sound:
                        self.robot_shoted_sound.play()
                    self.robot_render.remove(robot_shoted)
-                   print "pummm", len(robot_shoted)
                    self.robot_shoted += 1
 
                 human_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0].target, self.human_render, True)
@@ -221,7 +219,6 @@ class Game:
                    if self.human_shoted_sound:
                        self.human_shoted_sound.play()
                    self.human_render.remove(human_shoted)
-                   print "Uno menos...", len(human_shoted)
                    self.human_shoted += 1
 
     def run_level(self, level):
@@ -245,12 +242,15 @@ class Game:
         #ver que hacer con los fonts grrrrrrrr..........
         font = pygame.font.Font( filepath("HEMIHEAD.TTF"), 100)
         self.text_render.add(Phrase('Level %d' %(self.level), font, (255, 200, 0), (200, 200), 0.04))
+        pause = False
         while True:
             for e in pygame.event.get():
                 if e.type == QUIT:
                     exit()
                 if e.type == KEYDOWN and pygame.key.get_pressed()[K_ESCAPE]:
                     show_menu = True
+                elif e.type == KEYDOWN and pygame.key.get_pressed()[K_p]:
+                    pause = not pause
 
             if show_menu:
                 break
@@ -259,18 +259,19 @@ class Game:
             
             # TODO: fijarse si hay que ingresar personajes a la pantalla
             # fijarse si se disparo a alguien ver parametros
+            if not pause:
+                self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted)
+                self.human_shoted = 0
+                self.robot_shoted = 0
 
-            self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted)
-            self.human_shoted = 0
-            self.robot_shoted = 0
-
-            self.human_render.update(time_passed_seconds)
-            self.robot_render.update(time_passed_seconds)
-            self.text_render.update(time_passed)
+                self.human_render.update(time_passed_seconds)
+                self.robot_render.update(time_passed_seconds)
+                self.text_render.update(time_passed)
+                self.stuff_arrival(time_passed_seconds)
             self.shoter.update()
-            self.stuff_arrival(time_passed_seconds)
 
-            self.shot()
+            if not pause:
+                self.shot()
             #falta ver si se termino el nivel
             rectlist = self.board.draw()
             rectlist += self.human_render.draw(self.screen)
