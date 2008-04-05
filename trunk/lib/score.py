@@ -167,6 +167,7 @@ def showScores( screen, score, reason_game_end ):
     FONT_NAME   = 'HEMIHEAD.TTF'
     FONT_SIZE   = 24
     font        = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE)
+    font2        = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE + 6 )
     
     backgrounds = ['badgimp.png', 'venger.png']
 
@@ -175,8 +176,8 @@ def showScores( screen, score, reason_game_end ):
     screen.blit(background, (0, 0))
 
 
-    INITIAL_POS  = (130,110)
-    TITLE_POS    = (80,110)
+    INITIAL_POS  = (110,110)
+    TITLE_POS    = (30,110)
     RECORD_POS_X = 560
     color       = (20,  60, 240)
     colorUp      = (255,  0,   0)
@@ -202,11 +203,15 @@ def showScores( screen, score, reason_game_end ):
     scoreNewSprite = pygame.sprite.RenderUpdates()
 
 
-    font.set_bold(True)
+    font2.set_bold(True)
 
-    hsc  = HighScore( font, "Game Over: "+reason_game_end, color, TITLE_POS )
+    hsc  = HighScore( font2, "Game Over: "+reason_game_end, color, TITLE_POS )
     scoresSprites.add( hsc )
     text_position = ( text_position[0] , text_position[1] + hsc.height * 2 )
+
+    font2.set_bold(False)
+
+    font.set_bold(True)
 
     text = "..:: Nickname ::.."
     hsc  = HighScore( font, text, color, text_position )
