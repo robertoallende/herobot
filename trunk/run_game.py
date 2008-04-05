@@ -12,5 +12,5 @@ else:
     libdir = os.path.abspath(os.path.join(os.path.dirname(__file__), 'lib'))
     sys.path.insert(0, libdir)
 
-import main
-main.main()
+from menu import main
+main()
