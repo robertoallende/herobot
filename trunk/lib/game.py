@@ -228,7 +228,11 @@ class Game:
         #ver que hacer con los fonts grrrrrrrr..........
         font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
         self.text_render.add(Phrase('Level %d' %(self.level), font, (55, 55, 55), (200, 200), 0.04))
-        while( pygame.event.poll().type != KEYDOWN  ):
+        while True:
+            for e in pygame.event.get():
+                print e
+                if e.type == QUIT or (e.type == KEYDOWN and e.key == k_ESC):
+                    exit()
             time_passed = clock.tick(30)
             time_passed_seconds = time_passed / 1000.0
             

@@ -79,7 +79,7 @@ class Being(pygame.sprite.Sprite):
             self.last_img_change += 1
             
             #Si se llega a uno de los bordes se pega la vuelta
-            if (self.screen_width < self.rect.left and self.direction == RIGHT) or \
+            if (self.screen_width + 50 < self.rect.left and self.direction == RIGHT) or \
                (self.rect.left + self.rect.width  + 50 < 0 and self.direction == LEFT):
                self.set_direction(-self.direction)
 	    self.rect.left = self.rect.left + self.direction*time_passed_seconds*self.speed
