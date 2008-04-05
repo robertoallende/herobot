@@ -27,14 +27,15 @@ bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
 # Level Generator
 levels = []
+levels = []
 for i in xrange(1,100):
     d = {}
     d['total_time'] = 30 #- 5*i 
     d['cant_robots'] = 40
-    d['cant_human'] = (50 + i ) 
-    d['min_human_to_kill']=  5 + i 
-    d['human_speed'] =  180 * (1.2**i)
-    d['robot_speed'] =  120 * (1.2**i)  
+    d['cant_human'] = (100-i)/4 + i + 5
+    d['min_human_to_kill']=  5 + i
+    d['human_speed'] =  180 * (1.05**i)
+    d['robot_speed'] =  120 * (1.03**i)
     levels.append(d)
 
 class Game:
