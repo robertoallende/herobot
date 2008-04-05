@@ -20,6 +20,8 @@ soundfile='./../data/disparocorto.wav'
 #soundfile='./../data/intro.wav'
 soundfile2='./../data/herido.wav'
 
+
+
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
 # Level Generator
@@ -35,7 +37,7 @@ for i in xrange(1,100):
     levels.append(d)
 
 class Game:
-    def __init__(self, screen_width, screen_height, screen , sound, sound2):
+    def __init__(self, screen_width, screen_height, screen):
         self.screen_width = screen_width
         self.screen_height = screen_height
         
@@ -52,8 +54,6 @@ class Game:
 
         self.robot_shoted = 0
         self.human_shoted = 0
-        self.sound = pygame.mixer.Sound(soundfile)
-        self.sound2 = pygame.mixer.Sound(soundfile2)
 
 
 
@@ -61,6 +61,23 @@ class Game:
         # TODO: ver donde meter los fonts
         font = pygame.font.Font( filepath("GROOT___.TTF"), 100)
         presentation(phrase, font, self.screen)
+
+    def setup_sound(self):
+        """ Initialize sound files
+        """
+        try:
+            pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+        except pygame.error, exc:
+            print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
+
+        try:
+            self.shot_sound = pygame.mixer.Sound(soundfile)
+            self.human_shoted_sound = pygame.mixer.Sound(soundfile2)
+        except pygame.error, exc:
+            self.shot_sound = None
+            self.human_shoted_sound = None
+            print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
+
 
     #Genera los personajes antes de comenzar un nivel
     def generate_stuff(self):
@@ -168,17 +185,20 @@ class Game:
     #completar con las actualizaciones de board y demas yerbas
     def shot(self):
         if pygame.mouse.get_pressed()[0]:
-                self.sound.play()
+                if self.shot_sound:
+                    self.shot_sound.play()
                 robot_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.robot_render, True)
                 if robot_shoted:
-                   self.sound2.play()	
+                   if self.human_shoted_sound:
+                       self.human_shoted_sound.play()
                    self.robot_render.remove(robot_shoted)
                    print "pummm", len(robot_shoted)
                    self.robot_shoted += 1
 
                 human_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0], self.human_render, True)
                 if human_shoted:
-                   self.sound2.play()	
+                   if self.human_shoted_sound:
+                       self.human_shoted_sound.play()
                    self.human_render.remove(human_shoted)
                    print "Uno menos...", len(human_shoted)
                    self.human_shoted += 1
@@ -247,15 +267,13 @@ class Game:
 phrase = 'It  is a period  of civil war. The Jedi Knights, once keepers of Peace and Justice, find themselves named Generals in the Republics Struggle against the Separtists. The Separtist army, under the leadership of the mysterious GENERAL GREIVOUS, seems to grow with each passing day. Meanwhile, the Supreme Chancellor PALPATINE continues to tighten his grip of power on the Republic, and becomes increasingly more isolated.Ordered by the JEDI COUNCIL to investigate the allegations made my COUNT DOOKU, ANAKIN SKYWALKER and OBI-WAN KENOBI find themselves in a deadly search for the Dark Lord of the Sith DARTH SIDIOUS, who must be defeated to stop the spread of Rebellion, and bring order back to the Galaxy...'
 
 def main():
-    pygame.mixer.init(FREQ, BITSIZE, CHANNELS, BUFFER)
+        
     pygame.init()
     screen = pygame.display.set_mode( [ 800, 600] )
 
-    sound = pygame.mixer.Sound(soundfile)
-    sound2 = pygame.mixer.Sound(soundfile2)
-    
     pygame.mouse.set_visible(False)
-    g = Game( 800, 600, screen, sound, sound2)
+    g = Game( 800, 600, screen)
+    g.setup_sound()
     #g.run_intro()
 
     g.run_level(1)
