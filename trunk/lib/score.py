@@ -5,6 +5,7 @@ import sys
 import getopt
 import pygame
 from pygame.locals import *
+from random import choice
 
 
 class Score :
@@ -157,26 +158,27 @@ class HighScore(pygame.sprite.Sprite):
         self.alive       = True
 
 
-def showHighScores( screen, score, reason_game_end ):
+def showScores( screen, score, reason_game_end ):
 
     from data import load_image, filepath
 
     gameScore = Score()
 
-    FONT_NAME   = 'GROOT___.TTF'
+    FONT_NAME   = 'HEMIHEAD.TTF'
     FONT_SIZE   = 24
-    font       = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE)
+    font        = pygame.font.Font( filepath(FONT_NAME), FONT_SIZE)
     
-    background_image_filename = 'robot.gif'
+    backgrounds = ['badgimp.png', 'venger.png']
 
     SCREEN_SIZE = (800,600)
-    background, a = load_image( background_image_filename )
+    background, a = load_image( choice (backgrounds) )
     screen.blit(background, (0, 0))
 
 
     INITIAL_POS  = (130,110)
+    TITLE_POS    = (80,110)
     RECORD_POS_X = 520
-    color        = (20,  60, 240)
+    color       = (20,  60, 240)
     colorUp      = (255,  0,   0)
     QUANTITY     = 10
 
@@ -201,11 +203,11 @@ def showHighScores( screen, score, reason_game_end ):
 
 
     font.set_bold(True)
-    hsc  = HighScore( font, reason_game_end, color, text_position )
+
+    hsc  = HighScore( font, "Game Over: "+reason_game_end, color, TITLE_POS )
     scoresSprites.add( hsc )
     text_position = ( text_position[0] , text_position[1] + hsc.height * 2 )
-    font.set_bold(False)
-    
+
     text = "..:: Nickname ::.."
     hsc  = HighScore( font, text, color, text_position )
     scoresSprites.add( hsc )
@@ -213,6 +215,8 @@ def showHighScores( screen, score, reason_game_end ):
     record = "..:: Score ::.."
     score_position = (RECORD_POS_X - 20, text_position[1])
     recordsSprites.add( HighScore( font, record, color, score_position ) )
+
+    font.set_bold(False)
 
     text_position  = ( text_position[0] , text_position[1] + hsc.height * INTERLINE )
     score_position = (RECORD_POS_X, text_position[1])
@@ -299,7 +303,7 @@ def main():
 
     #background, a = load_image( background_image_filename )
 
-    showHighScores( screen, SCORE, REASON_GAME_END )
+    showScores( screen, SCORE, REASON_GAME_END )
     print ">>>>>>>>>>>> Salio <<<<<<<<<<<<<<<<<<<"
     while pygame.event.poll().type != KEYDOWN: pygame.time.delay(10)
 
