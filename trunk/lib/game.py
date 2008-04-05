@@ -395,7 +395,7 @@ class Game:
             self.max_robot_to_kill = self.board.lives
             self.run_level((level + 1)%100)
 
-phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. May the force be with you, or not...'
+phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. Neither kill aliens, they are stronger than you think. May the force be with you, or not...'
 
 def main():
         
