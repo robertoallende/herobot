@@ -184,7 +184,6 @@ class Game:
         self.level = level
 
         self.generate_stuff()
-        #self.stuff_arrival()
         while( pygame.event.poll().type != KEYDOWN  ):
             time_passed = clock.tick(30)
             time_passed_seconds = time_passed / 1000.0
