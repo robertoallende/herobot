@@ -1,12 +1,14 @@
-background_image_filename = 'robot.gif'
-icon_image_filename       = 'crosshair.png'
-icon_hover_image_filename = 'crosshair.png'
-font_filename             = 'GROOT___.TTF'
-
 from data import load_image, filepath
 import pygame
 from pygame.locals import *
 from sys import exit
+from random import choice
+
+
+backgrounds   = ['badgimp.png', 'venger.png']
+icon_filename = 'crosshair.png'
+font_filename = 'HEMIHEAD.TTF'
+
 
 def main():
     #SCREEN_SIZE = ( 640, 480 )
@@ -15,16 +17,16 @@ def main():
 
     pygame.init()
     screen = pygame.display.set_mode( SCREEN_SIZE )
-    background, a = load_image( background_image_filename ) 
-    icon, a = load_image( icon_image_filename )
-    icon_hover, a = load_image( icon_hover_image_filename )
+    background, a = load_image( choice( backgrounds ) ) 
+    icon, a = load_image( icon_filename )
     
     font             = pygame.font.Font( filepath(font_filename), 32)
     #font             = pygame.font.SysFont( "Verdana", 34 )
-    fontColor        = ( 255, 0, 0 )
+    #fontColor        = ( 0, 240, 255 )
+    fontColor        = ( 200, 200, 200 )
     backgroundColor  = None #( 0, 0, 0)
     #menuPosition    = ( 140, 160 ) # 640x480
-    menuPosition    = ( 200, 180 ) # 800x600
+    menuPosition     = ( 460, 80 ) # 800x600
     #menuPosition     = ( 200, 280 ) # 1024x768
 
     Fullscreen       = False
@@ -33,11 +35,11 @@ def main():
 
 
     key  = { "fullscreen":K_f, "quit":K_q, "left":K_LEFT, "right":K_RIGHT, "up":K_UP, "down":K_DOWN, "fire":K_SPACE, "select":K_RETURN }
-    #menu = ["New Game!", "Help", "Score", "Configurations", "Quit"]
-    menu = [ { "title": "New Game!", "action":"pay_game", "area":0 }, \
-    #        { "title": "Help", "action":"show_help", "area":0 }, \
-    #        { "title": "Score", "action":"show_score", "area":0 }, \
-    #        { "title": "Configurations", "action":"configuration", "area":0 }, \
+    menu = [ 
+            { "title": "New Game!", "action":"pay_game", "area":0 }, \
+           # { "title": "Show Score", "action":"show_score", "area":0 }, \
+           # { "title": "Show Intro", "action":"show_score", "area":0 }, \
+           # { "title": "Credits", "action":"credits", "area":0 }, \
             { "title": "Quit", "action":"quit and bye bye!", "area":0 } \
            ]
 
@@ -91,18 +93,16 @@ def main():
                 y += icon.get_height()
                 if menuItem != menuItemSelected :
                     text = font.render( item['title'], True, fontColor )
-                    screen.blit( icon, ( x, y ))
                     screen.blit( text, ( x + icon.get_width() + 10, y + ( icon.get_height() - text.get_height() ) / 2 ))
                 else :
                     font.set_bold(True)
                     text = font.render( item['title'], True, fontColor )
                     font.set_bold(False)
-                    screen.blit( icon_hover, ( x, y ))
-                    screen.blit( text, ( x + icon_hover.get_width() + 10, y + ( icon.get_height() - text.get_height() ) / 2 ))
+                    screen.blit( icon, ( x, y ))
+                    screen.blit( text, ( x + icon.get_width() + 10, y + ( icon.get_height() - text.get_height() ) / 2 ))
 
                 y += 10
                 menuItem += 1
-
 
             pygame.display.update()
 
