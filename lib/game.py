@@ -23,7 +23,6 @@ soundfile3=filepath('robot_negative.wav')
 soundfile_game=filepath('intro.wav')
 soundfile_intro=filepath('intro_screen.wav')
 soundfile_score=filepath('score.wav')
-soundfile_alien=filepath('alien.wav')
 
 bottom_rail = [300, 420, 540]
 img_size = ['small', 'medium', 'large']
@@ -38,7 +37,6 @@ for i in xrange(1,100):
     d['min_human_to_kill']=  5 + i
     d['human_speed'] =  180 * (1.05**i)
     d['robot_speed'] =  120 * (1.03**i)
-    d['alien_speed'] = 100
     levels.append(d)
 
 class Game:
@@ -59,15 +57,12 @@ class Game:
 
         self.robot_shoted = 0
         self.human_shoted = 0
-        self.alien_shoted = 0
         self.score = 0
         self.robot_shoted_sound = 0
         
         self.intro_sound = 0
         self.game_sound = 0
         self.score_sound = 0
-        self.alien_sound = 0
-
         load_secuences()#Muy importante esto
 
     def run_intro(self):
@@ -95,7 +90,6 @@ class Game:
             self.intro_sound = pygame.mixer.Sound(soundfile_intro)
             self.game_sound = pygame.mixer.Sound(soundfile_game)
             self.score_sound = pygame.mixer.Sound(soundfile_score)
-            self.alien_sound = pygame.mixer.Sound(soundfile_alien)
         except pygame.error, exc:
             self.shot_sound = None
             self.human_shoted_sound = None
@@ -103,8 +97,6 @@ class Game:
             self.intro_sound = None
             self.game_sound = None
             self.score_sound = None
-            self.alien_sound = None
-
             print >> sys.stderr, "I'm sorry buddy, get a sound card: %s", exc
 
 
@@ -112,22 +104,18 @@ class Game:
     def generate_stuff(self):
         self.robot_rail = []
         self.human_rail = []
-        self.alien_rail = []
         
         #Tiempo de arribo de los personajes
         self.robot_arrival = []
         self.human_arrival = []
-        self.alien_arrival = []
         self.robot_last_arrival = []
         self.human_last_arrival = []
-        self.alien_last_arrival = []
         
         cant_robots_gen = 0
         cant_humans_gen = 0
         for i in xrange(3):
             self.robot_rail.append(pygame.sprite.Group())
             self.human_rail.append(pygame.sprite.Group())
-            self.alien_rail.append(pygame.sprite.Group())
             
             #Genero los personajes de todo el nivel, revisar pues el ultimo rail deberia ser lo que queda y no un random
             for cant in xrange(randint(0,self.cant_robots - cant_robots_gen)):
@@ -161,27 +149,14 @@ class Game:
 
             cant_gen = len(self.human_rail[i].sprites())
             cant_humans_gen += cant_gen
-
             if cant_gen:
                 self.human_arrival.append(self.total_time*0.8/cant_gen)
             else:
                 self.human_arrival.append(self.total_time)
 
-            #Aliens
-            if randint(0,1):
-                direction = LEFT
-                pos = (self.screen_width-70, bottom_rail[i])
-            else:
-                direction = RIGHT
-                pos = (-70, bottom_rail[i])
-            self.alien_rail[i].add(Alien(pos, self.board_width, \
-                                  self.alien_speed, direction, 10, img_size[i]))
-            self.alien_arrival.append(randint(1, self.total_time-3))
-            self.alien_last_arrival.append(0)
         # Los personajes que estan en la pantalla
         self.robot_render = pygame.sprite.RenderUpdates()
         self.human_render = pygame.sprite.RenderUpdates()
-        self.alien_render = pygame.sprite.RenderUpdates()
         self.text_render = pygame.sprite.RenderUpdates()
 
         if hasattr(self, 'board'):
@@ -212,14 +187,6 @@ class Game:
                     self.robot_render.add(robot)
                     self.robot_rail[i].remove(robot)
                     self.robot_last_arrival[i] = 0
-
-
-            self.alien_last_arrival[i] += time_passed_seconds
-            if self.alien_rail[i].sprites() and self.alien_arrival[i] < self.alien_last_arrival[i]:
-                    alien = self.alien_rail[i].sprites()[0]
-                    self.alien_render.add(alien)
-                    self.alien_rail[i].remove(alien)
-                    self.alien_last_arrival[i] = 0
 
             #Si no hay humanos para ingreasar genero uno nuevo
             if not self.human_rail[i].sprites():
@@ -259,14 +226,6 @@ class Game:
                    self.human_render.remove(human_shoted)
                    self.human_shoted += 1
 
-                alien_shoted = pygame.sprite.spritecollide(self.shoter.sprites()[0].target, self.alien_render, True)
-                if alien_shoted:
-                   if self.alien_sound:
-                       self.alien_sound.play()
-                   self.alien_render.remove(alien_shoted)
-                   self.alien_shoted += 1
-
-
     def run_level(self, level):
     	if self.game_sound:
     	    self.game_sound.play(-1)
@@ -281,7 +240,6 @@ class Game:
         self.min_human_to_kill = levels[level]['min_human_to_kill']
         self.human_speed = levels[level]['human_speed']
         self.robot_speed = levels[level]['robot_speed']
-        self.alien_speed = levels[level]['alien_speed']
 
         self.level = level
 
@@ -312,14 +270,12 @@ class Game:
             # TODO: fijarse si hay que ingresar personajes a la pantalla
             # fijarse si se disparo a alguien ver parametros
             if not pause:
-                self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted, self.alien_shoted)
+                self.board.update(time_passed_seconds, self.human_shoted, self.robot_shoted)
                 self.human_shoted = 0
                 self.robot_shoted = 0
-                self.alien_shoted = 0
 
                 self.human_render.update(time_passed_seconds)
                 self.robot_render.update(time_passed_seconds)
-                self.alien_render.update(time_passed_seconds)
                 self.text_render.update(time_passed)
                 self.stuff_arrival(time_passed_seconds)
             self.shoter.update()
@@ -330,7 +286,6 @@ class Game:
             rectlist = self.board.draw()
             rectlist += self.human_render.draw(self.screen)
             rectlist += self.robot_render.draw(self.screen)
-            rectlist += self.alien_render.draw(self.screen)
             rectlist += self.text_render.draw(self.screen)
             rectlist += self.shoter.draw(self.screen)
             
@@ -338,7 +293,6 @@ class Game:
 
             self.board.clear()
             self.human_render.clear(self.screen, self.board.background)
-            self.robot_render.clear(self.screen, self.board.background)
             self.robot_render.clear(self.screen, self.board.background)
             self.text_render.clear(self.screen, self.board.background)
             self.shoter.clear(self.screen, self.board.background)
@@ -349,21 +303,6 @@ class Game:
         #end of the level or end of the game
         reason = self.board.end_reason()
         if reason == 'killed too many robots':
-            #print 'perdiste ' + reason
-
-            if self.game_sound:
-    	        self.game_sound.stop()
-            if self.score_sound:
-            	self.score_sound.play()
-
-            showScores( self.screen, self.board.score, reason )
-
-            if self.score_sound:
-            	self.score_sound.stop()
-
-        reason = self.board.end_reason()
-        
-        if reason == 'alien killed':
             #print 'perdiste ' + reason
 
             if self.game_sound:
@@ -395,7 +334,7 @@ class Game:
             self.max_robot_to_kill = self.board.lives
             self.run_level((level + 1)%100)
 
-phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. Neither kill aliens, they are stronger than you think. May the force be with you, or not...'
+phrase = 'Once again, the robots turn against humans to rule the Earth. This time there is no Neo, no Spooner, the humans have no chance. This fight is not about survival, It is just about money because Viky will give you a buck for each human you kill, and you are too greedy and alcoholic to let them live... but be careful, don not shot robots, Viki does not like it. May the force be with you, or not...'
 
 def main():
         

@@ -56,7 +56,7 @@ class Text(pygame.sprite.Sprite):
         self.width = self.render_text.get_width()
 
 class Board:
-    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100, humans= 10, level=1, alien=1):
+    def __init__(self, game, score = 0, time = 10, lives = 3, target = 100, humans= 10, level=1):
         self.game = game
         self.screen = self.game.screen
         self.time_passed = 0
@@ -69,7 +69,6 @@ class Board:
         self.lives = lives
         self.target = target
         self.humans = humans
-        self.alien = alien
         self.level = level
 
 
@@ -126,7 +125,7 @@ class Board:
         self.level_text = Text("Level: " + str(self.level) , initial_pos, 1 )
         return self.level_text
 
-    def update(self, time_passed, hits, lives, alien):
+    def update(self, time_passed, hits, lives ):
         '''Blit everything to the screen'''
         if self.time_passed <= 0:
             self.time -= 1
@@ -149,9 +148,7 @@ class Board:
             else:
                 caracter = ''
             self.lives_text.update(time_passed, "Error Margin: " + caracter + str( self.lives ) )
-        
-        if alien > 0:
-            self.alien -= alien
+
         self.time_passed -= time_passed
 
         #Bonus
@@ -173,16 +170,12 @@ class Board:
             return True
         elif self.target == 0:
             return True
-        elif self.alien == 0:
-            return True
         else:
             return False
 
     def end_reason(self):
-        if self.alien == 0:
-            return 'alien killed'
-        elif self.lives == 0:
-            return 'killed too many robots'
+        if self.lives == 0:
+            return 'killed too many robots' 
         elif self.time == 0 and self.target > 0:
             return 'not killed enough humans' 
         elif self.time == 0 and self.target == 0:
