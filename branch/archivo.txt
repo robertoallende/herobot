@@ -14,3 +14,6 @@ else:
 
 from menu import main
 main()
+
+print "el programa se ejecuto exitosamente"
+
